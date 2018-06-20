@@ -6,20 +6,68 @@ import sys
 from os.path import expanduser
 
 from PyQt5.QtWidgets import (QMainWindow, QTextEdit, QAction, QApplication,
-                            QFileDialog)
-from PyQt5.QtCore import QDir
-
+                            QFileDialog, QLabel, QWidget, QGridLayout,
+                            QDockWidget, QListWidget)
+from PyQt5.QtGui import QPixmap, QColor
+from PyQt5.QtCore import Qt
 
 class InvoiceX(QMainWindow):
     
     def __init__(self):
         super().__init__()
         
+        self.left = 300
+        self.top = 300
+        self.width = 850
+        self.height = 650
+
         self.initUI()
-        
         
     def initUI(self):
 
+        # StatusBar
+        self.statusBar()
+
+        # MenuBar
+        self.setMenuBar()
+
+        # Dock View
+        self.items = QDockWidget("Fields", self)
+        self.fieldsWidget = QLabel(self)
+
+        self.items.setWidget(self.fieldsWidget)
+        self.items.setFloating(False)
+        self.items.setMinimumWidth(300)
+        self.items.setStyleSheet("QWidget { background-color: #AAB2BD }")        
+        self.addDockWidget(Qt.RightDockWidgetArea, self.items)
+
+        # PDF preview
+        self.square = QLabel(self)
+        self.square.setGeometry(0, 30, 100, 100)
+        self.square.setStyleSheet("QWidget { background-color: #CCD1D9 }")
+
+        self.setCentralWidget(self.square)
+        
+        # toolbar = self.addToolBar('Exit')
+        # toolbar.addAction(exitAct)
+        
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setWindowTitle('Invoice-X')    
+        self.show()
+
+    def showFileDialog(self):
+
+        fname = QFileDialog.getOpenFileNames(self, 'Open file', expanduser("~"), "pdf (*.pdf);; All Files (*)")
+        
+        if fname[0]:
+            print(str(fname[0][0]))
+            # self.file_selected.setText(str(fname[0][0]))
+            # self.file_names = fname[0]
+
+    def extractFromPDF(self):
+        pass
+        
+    def setMenuBar(self):
         exitAct = QAction('Exit', self)
         exitAct.setShortcut('Ctrl+Q')
         exitAct.setStatusTip('Exit application')
@@ -47,11 +95,8 @@ class InvoiceX(QMainWindow):
         addMetadata = QAction('Add Metadata', self)
         addMetadata.setStatusTip('Add metadata to PDF')
 
-        self.statusBar()
-
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
-        # fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(openFile)
         fileMenu.addAction(exitAct)
 
@@ -67,27 +112,6 @@ class InvoiceX(QMainWindow):
         commandMenu.addAction(extractFields)
 
         helpMenu = menubar.addMenu('&Help')
-
-
-        # toolbar = self.addToolBar('Exit')
-        # toolbar.addAction(exitAct)
-        
-        self.setGeometry(300, 300, 550, 650)
-        self.setWindowTitle('Invoice-X')    
-        self.show()
-
-    def showFileDialog(self):
-
-        fname = QFileDialog.getOpenFileNames(self, 'Open file', expanduser("~"), "pdf (*.pdf);; All Files (*)")
-        
-        if fname[0]:
-            print(str(fname[0][0]))
-            # self.file_selected.setText(str(fname[0][0]))
-            # self.file_names = fname[0]
-
-    def extractFromPDF(self):
-        pass
-        
         
 if __name__ == '__main__':
     
