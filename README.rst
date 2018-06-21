@@ -13,4 +13,4 @@ Status
 ------
 The project is under development
 
-.. image:: Screenshot_from_2018-06-20_16-17-38.png
+.. image:: Screenshot.png
