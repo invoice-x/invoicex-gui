@@ -3,6 +3,8 @@
 
 
 import sys
+import subprocess
+import os
 from os.path import expanduser
 
 from PyQt5.QtWidgets import (QMainWindow, QTextEdit, QAction, QApplication,
@@ -18,16 +20,15 @@ class InvoiceX(QMainWindow):
         
         self.left = 300
         self.top = 300
-        self.width = 1
-        self.height = 1
+        self.width = 680
+        self.height = 480
 
-        self.initialLoad = 0
+        self.fileLoaded = False
 
         self.initUI()
         
     def initUI(self):
 
-        print()
         # StatusBar
         self.statusBar()
         self.setStatusTip('Select a PDF to get started')
@@ -45,27 +46,10 @@ class InvoiceX(QMainWindow):
         self.fields.setStyleSheet("QWidget { background-color: #AAB2BD}")        
         self.addDockWidget(Qt.RightDockWidgetArea, self.fields)
 
-        # Central Widget
-
-        # self.square = QLabel(self)
-        # self.pixmap = QPixmap('image.jpg')
-        # self.pixmap = self.pixmap.scaledToHeight(1000, Qt.SmoothTransformation)
-        # self.square.setPixmap(self.pixmap)
-        # self.square.resize(self.pixmap.width(), self.pixmap.height())
-        # self.square.setStyleSheet("QWidget { background-color: #CCD1D9 }")
-
-        # hbox = QHBoxLayout()
-        # hbox.addWidget(self.square)
-        # centreWidget = QWidget()
-        # centreWidget.setLayout(hbox)
-        # print(centreWidget.size())
-        # self.pixmap = self.pixmap.scaledToHeight(centreWidget.size().height(), Qt.SmoothTransformation)
-        # self.square.setPixmap(self.pixmap)
+        # Central Widget (PDF Preview)
+        # self.pdfPreview = 'image.jpg'
         self.square = QLabel(self)
-        # self.pixmap = QPixmap('image.jpg')
-        # self.square.setPixmap(self.pixmap)
-        # self.square.setStyleSheet("background-image: url(image.jpg); background-repeat: no-repeat   ")
-        self.square.setPixmap(QPixmap('image.jpg').scaled(300,400,Qt.KeepAspectRatio , Qt.SmoothTransformation))
+        self.square.setAlignment(Qt.AlignCenter)
         self.setCentralWidget(self.square)
 
         toolbar = self.addToolBar('File')
@@ -140,10 +124,19 @@ class InvoiceX(QMainWindow):
 
     def showFileDialog(self):
 
-        fname = QFileDialog.getOpenFileNames(self, 'Open file', expanduser("~"), "pdf (*.pdf);; All Files (*)")
+        fname = QFileDialog.getOpenFileName(self, 'Open file', expanduser("~"), "pdf (*.pdf)")
         
         if fname[0]:
-            print(str(fname[0][0]))
+            print(str(fname[0]))
+            if not os.path.exists('.load'):
+                os.mkdir('.load')
+            convert = ['convert', '-verbose', '-density', '150', '-trim', fname[0], '-quality', '100', '-flatten', '-sharpen', '0x1.0', '.load/preview.jpg']
+            subprocess.call(convert)
+            self.pdfPreview = '.load/preview.jpg'
+            self.fileLoaded = True
+            self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(),self.square.size().height(),Qt.KeepAspectRatio , Qt.SmoothTransformation))
+        
+
             # self.file_selected.setText(str(fname[0][0]))
             # self.file_names = fname[0]
 
@@ -155,27 +148,13 @@ class InvoiceX(QMainWindow):
 
     def exportFields(self, outputformat):
         pass
-
-    # def eventFilter(self, widget, event):
-    #     if (event.type() == QEvent.Resize and
-    #         widget is self.square):
-    #         self.square.setPixmap(self.pixmap.scaled(
-    #             self.square.width(), self.square.height(),
-    #             Qt.KeepAspectRatio))
-    #         return True
-    #     return QMainWindow.eventFilter(self, widget, event)
     
     def resizeEvent(self, event):
-        if self.initialLoad == 0:
-            self.initialLoad = 1
-            self.square.setPixmap(QPixmap('image.jpg').scaled(300,400,Qt.KeepAspectRatio , Qt.SmoothTransformation))
-        else:
-            self.square.setPixmap(QPixmap('image.jpg').scaled(self.square.size().width(),self.square.size().height(),Qt.KeepAspectRatio , Qt.SmoothTransformation))
+        if self.fileLoaded:
+            self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(),self.square.size().height(),Qt.KeepAspectRatio , Qt.SmoothTransformation))
             self.square.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Ignored)
-            self.square.setAlignment(Qt.AlignCenter)
             QMainWindow.resizeEvent(self, event)
 
-        
 if __name__ == '__main__':
     
     app = QApplication(sys.argv)
