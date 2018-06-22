@@ -6,18 +6,21 @@ import sys
 import subprocess
 import os
 from os.path import expanduser
+from facturx import *
+import json
 
-from PyQt5.QtWidgets import (QMainWindow, QTextEdit, QAction, QApplication,
-                            QFileDialog, QLabel, QWidget, QDockWidget,
-                            QListWidget, QHBoxLayout, QSizePolicy)
-from PyQt5.QtGui import QPixmap, QColor, QIcon
-from PyQt5.QtCore import Qt, QEvent
+from PyQt5.QtWidgets import (QMainWindow, QAction, QApplication, QFileDialog,
+                             QLabel, QDockWidget, QSizePolicy, QGridLayout,
+                             QScrollArea, QWidget, QFrame)
+from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtCore import Qt
+
 
 class InvoiceX(QMainWindow):
-    
+
     def __init__(self):
         super().__init__()
-        
+
         self.left = 300
         self.top = 300
         self.width = 680
@@ -26,7 +29,7 @@ class InvoiceX(QMainWindow):
         self.fileLoaded = False
 
         self.initUI()
-        
+
     def initUI(self):
 
         # StatusBar
@@ -37,14 +40,7 @@ class InvoiceX(QMainWindow):
         self.setMenuBar()
 
         # Dock View Right (Fields)
-        self.fields = QDockWidget("Fields", self)
-        self.fieldsWidget = QLabel(self)
-
-        self.fields.setWidget(self.fieldsWidget)
-        self.fields.setFloating(False)
-        self.fields.setMinimumWidth(300)
-        self.fields.setStyleSheet("QWidget { background-color: #AAB2BD}")        
-        self.addDockWidget(Qt.RightDockWidgetArea, self.fields)
+        self.dockViewRight()
 
         # Central Widget (PDF Preview)
         # self.pdfPreview = 'image.jpg'
@@ -58,8 +54,21 @@ class InvoiceX(QMainWindow):
         toolbar.addAction(self.validateMetadata)
 
         self.setGeometry(self.left, self.top, self.width, self.height)
-        self.setWindowTitle('Invoice-X')    
+        self.setWindowTitle('Invoice-X')
         self.show()
+
+    def dockViewRight(self):
+        self.fields = QDockWidget("Fields", self)
+        self.fieldsQWidget = QWidget()
+        self.fieldsScrollArea = QScrollArea()
+        self.fieldsScrollArea.setWidgetResizable(True)
+        self.fieldsScrollArea.setWidget(self.fieldsQWidget)
+
+        self.fields.setWidget(self.fieldsScrollArea)
+        self.fields.setFloating(False)
+        self.fields.setMinimumWidth(360)
+        self.fields.setStyleSheet("QWidget { background-color: #AAB2BD}")
+        self.addDockWidget(Qt.RightDockWidgetArea, self.fields)
 
     def setMenuBar(self):
         self.exitAct = QAction(QIcon('icons/exit.png'), 'Exit', self)
@@ -122,20 +131,50 @@ class InvoiceX(QMainWindow):
 
         helpMenu = menubar.addMenu('&Help')
 
+    def pdfPreview(self, fileName):
+        print(str(fileName))
+        if not os.path.exists('.load'):
+            os.mkdir('.load')
+        convert = ['convert', '-verbose', '-density', '150', '-trim', fileName,
+                   '-quality', '100', '-flatten', '-sharpen', '0x1.0',
+                   '.load/preview.jpg']
+        subprocess.call(convert)
+        self.pdfPreview = '.load/preview.jpg'
+        self.fileLoaded = True
+        self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(), self.square.size().height(),Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+    def showFields(self, fileName):
+        factx = FacturX(fileName)
+        factx.write_json('.load/output.json')
+        with open('.load/output.json') as jsonFile:
+            self.fieldsDict = json.load(jsonFile)
+        os.remove('.load/output.json')
+
+        layout = QGridLayout()
+        i = 0
+        for key in sorted(self.fieldsDict):
+            i += 1
+            fieldKey = QLabel(key + ": ")
+            if self.fieldsDict[key] is None:
+                fieldValue = QLabel("NA")
+            else:
+                fieldValue = QLabel(self.fieldsDict[key])
+            fieldValue.setFrameShape(QFrame.Panel)
+            fieldValue.setFrameShadow(QFrame.Plain)
+            fieldValue.setLineWidth(3)
+            layout.addWidget(fieldKey, i, 0)
+            layout.addWidget(fieldValue, i, 1)
+
+        self.fieldsQWidget.setLayout(layout)
+
     def showFileDialog(self):
 
-        fname = QFileDialog.getOpenFileName(self, 'Open file', expanduser("~"), "pdf (*.pdf)")
-        
-        if fname[0]:
-            print(str(fname[0]))
-            if not os.path.exists('.load'):
-                os.mkdir('.load')
-            convert = ['convert', '-verbose', '-density', '150', '-trim', fname[0], '-quality', '100', '-flatten', '-sharpen', '0x1.0', '.load/preview.jpg']
-            subprocess.call(convert)
-            self.pdfPreview = '.load/preview.jpg'
-            self.fileLoaded = True
-            self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(),self.square.size().height(),Qt.KeepAspectRatio , Qt.SmoothTransformation))
-        
+        fileName = QFileDialog.getOpenFileName(self, 'Open file',
+                                               expanduser("~"), "pdf (*.pdf)")
+
+        if fileName[0]:
+            self.pdfPreview(fileName[0])
+            self.showFields(fileName[0])
 
             # self.file_selected.setText(str(fname[0][0]))
             # self.file_names = fname[0]
@@ -148,15 +187,16 @@ class InvoiceX(QMainWindow):
 
     def exportFields(self, outputformat):
         pass
-    
+
     def resizeEvent(self, event):
         if self.fileLoaded:
             self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(),self.square.size().height(),Qt.KeepAspectRatio , Qt.SmoothTransformation))
             self.square.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Ignored)
             QMainWindow.resizeEvent(self, event)
 
+
 if __name__ == '__main__':
-    
+
     app = QApplication(sys.argv)
     invoicex = InvoiceX()
     sys.exit(app.exec_())
