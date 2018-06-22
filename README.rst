@@ -12,6 +12,15 @@ The application is built using `PyQt5 <https://www.riverbankcomputing.com/softwa
 
 Status
 ------
-The project is under development
+
+**The project is under development**
+
+Working Features:
+- Preview Loaded PDF
+- Load metadata to right Dock
 
 .. image:: Screenshot.png
+
+Author
+------
+- `Harshit Joshi <https://github.com/duskybomb>`_
