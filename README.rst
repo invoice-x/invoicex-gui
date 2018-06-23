@@ -16,6 +16,7 @@ Status
 **The project is under development**
 
 Working Features:
+
 - Preview Loaded PDF
 - Load metadata to right Dock
 
