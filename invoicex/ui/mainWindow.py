@@ -1,12 +1,13 @@
 import subprocess
 import os
+import sys
 
 from facturx import *
 import json
 
 from PyQt5.QtWidgets import (QMainWindow, QAction, QFileDialog, QFrame,
                              QLabel, QDockWidget, QSizePolicy, QGridLayout,
-                             QScrollArea, QWidget)
+                             QScrollArea, QWidget, QMessageBox)
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
 
@@ -37,6 +38,7 @@ class InvoiceX(QMainWindow):
 
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setWindowTitle('Invoice-X')
+        self.setWindowIcon(QIcon('icons/logo.png'))
         self.show()
 
     def setToolBar(self):
@@ -56,6 +58,9 @@ class InvoiceX(QMainWindow):
         self.fieldsScrollArea = QScrollArea()
         self.fieldsScrollArea.setWidgetResizable(True)
         self.fieldsScrollArea.setWidget(self.fieldsQWidget)
+
+        self.layout = QGridLayout()
+        self.fieldsQWidget.setLayout(self.layout)
 
         self.fields.setWidget(self.fieldsScrollArea)
         self.fields.setFloating(False)
@@ -98,6 +103,7 @@ class InvoiceX(QMainWindow):
         self.validateMetadata = QAction(QIcon('icons/validate.png'),
                                         'Validate', self)
         self.validateMetadata.setStatusTip('Validate XML')
+        self.validateMetadata.triggered.connect(self.validateXML)
 
         addMetadata = QAction('Add Metadata', self)
         addMetadata.setStatusTip('Add metadata to PDF')
@@ -108,7 +114,7 @@ class InvoiceX(QMainWindow):
         documentation = QAction('Documentation', self)
         documentation.setStatusTip('Open Documentation for Invoice-X')
 
-        aboutApp = QAction('About')
+        aboutApp = QAction('About', self)
         aboutApp.setStatusTip('Know about Invoice-X')
 
         menubar = self.menuBar()
@@ -133,26 +139,41 @@ class InvoiceX(QMainWindow):
         helpMenu.addAction(documentation)
         helpMenu.addAction(aboutApp)
 
-    def pdfPreview(self, fileName):
-        print(str(fileName))
+    def validateXML(self):
+        try:
+            if self.factx.is_valid():
+                QMessageBox.information(self, 'Valid XML',
+                                        "The XML is Valid",
+                                        QMessageBox.Ok)
+            else:
+                QMessageBox.critical(self, 'Invalid XML',
+                                     "The XML is invalid",
+                                     QMessageBox.Ok)
+        except AttributeError:
+            QMessageBox.critical(self, 'File Not Found',
+                                 "Load a PDF first",
+                                 QMessageBox.Ok)
+
+    def setPdfPreview(self):
+        # print(str(fileName[0]))
         if not os.path.exists('.load'):
             os.mkdir('.load')
-        convert = ['convert', '-verbose', '-density', '150', '-trim', fileName,
-                   '-quality', '100', '-flatten', '-sharpen', '0x1.0',
-                   '.load/preview.jpg']
+        convert = ['convert', '-verbose', '-density', '150', '-trim',
+                   self.fileName[0], '-quality', '100', '-flatten',
+                   '-sharpen', '0x1.0', '.load/preview.jpg']
         subprocess.call(convert)
         self.pdfPreview = '.load/preview.jpg'
         self.fileLoaded = True
         self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(), self.square.size().height(),Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-    def showFields(self, fileName):
-        factx = FacturX(fileName)
-        factx.write_json('.load/output.json')
+    def showFields(self):
+        print('showFields')
+        self.factx.write_json('.load/output.json')
         with open('.load/output.json') as jsonFile:
             self.fieldsDict = json.load(jsonFile)
         os.remove('.load/output.json')
+        # print(self.fieldsDict)
 
-        layout = QGridLayout()
         i = 0
 
         metadata_field = {
@@ -178,23 +199,23 @@ class InvoiceX(QMainWindow):
                 fieldValue = QLabel("NA")
             else:
                 fieldValue = QLabel(self.fieldsDict[key])
-            fieldValue.setFrameShape(QFrame.Panel)
-            fieldValue.setFrameShadow(QFrame.Plain)
-            fieldValue.setLineWidth(3)
-            layout.addWidget(fieldKey, i, 0)
-            layout.addWidget(fieldValue, i, 1)
-
-        self.fieldsQWidget.setLayout(layout)
+            # fieldValue.setFrameShape(QFrame.Panel)
+            # fieldValue.setFrameShadow(QFrame.Plain)
+            # fieldValue.setLineWidth(3)
+            self.layout.addWidget(fieldKey, i, 0)
+            self.layout.addWidget(fieldValue, i, 1)
 
     def showFileDialog(self):
 
-        fileName = QFileDialog.getOpenFileName(self, 'Open file',
-                                               os.path.expanduser("~"),
-                                               "pdf (*.pdf)")
+        self.fileName = QFileDialog.getOpenFileName(self, 'Open file',
+                                                    os.path.expanduser("~"),
+                                                    "pdf (*.pdf)")
 
-        if fileName[0]:
-            self.pdfPreview(fileName[0])
-            self.showFields(fileName[0])
+        if self.fileName[0]:
+            # print(fileName[0])
+            self.factx = FacturX(self.fileName[0])
+            self.setPdfPreview()
+            self.showFields()
             self.setStatusTip("PDF is Ready")
 
             # self.file_selected.setText(str(fname[0][0]))
