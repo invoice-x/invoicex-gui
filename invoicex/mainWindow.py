@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QMainWindow, QAction, QFileDialog, QFrame,
                              QLabel, QDockWidget, QSizePolicy, QGridLayout,
                              QScrollArea, QWidget, QMessageBox)
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QEvent
 
 
 class InvoiceX(QMainWindow):
@@ -54,6 +54,7 @@ class InvoiceX(QMainWindow):
 
     def setDockViewRight(self):
         self.fields = QDockWidget("Fields", self)
+        self.fields.installEventFilter(self)
         self.fieldsQWidget = QWidget()
         self.fieldsScrollArea = QScrollArea()
         self.fieldsScrollArea.setWidgetResizable(True)
@@ -83,6 +84,11 @@ class InvoiceX(QMainWindow):
         self.saveFile.setShortcut('Ctrl+S')
         self.saveFile.setStatusTip('Save File as a new File')
         self.saveFile.triggered.connect(self.showSaveDialog)
+
+        self.viewDock = QAction('View Dock', self, checkable=True)
+        self.viewDock.setStatusTip('View Dock')
+        self.viewDock.setChecked(True)
+        self.viewDock.triggered.connect(self.viewDockToggle)
 
         extractFields = QAction('Extract Fields', self)
         extractFields.setStatusTip('Extract Fields from PDF and add to XML')
@@ -121,6 +127,7 @@ class InvoiceX(QMainWindow):
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(self.openFile)
         fileMenu.addAction(self.saveFile)
+        fileMenu.addAction(self.viewDock)
         fileMenu.addAction(self.exitAct)
 
         commandMenu = menubar.addMenu('&Command')
@@ -138,6 +145,12 @@ class InvoiceX(QMainWindow):
         helpMenu = menubar.addMenu('&Help')
         helpMenu.addAction(documentation)
         helpMenu.addAction(aboutApp)
+
+    def viewDockToggle(self, state):
+        if state:
+            self.fields.show()
+        else:
+            self.fields.hide()
 
     def validateXML(self):
         try:
@@ -235,3 +248,8 @@ class InvoiceX(QMainWindow):
             self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(),self.square.size().height(),Qt.KeepAspectRatio , Qt.SmoothTransformation))
             self.square.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Ignored)
             QMainWindow.resizeEvent(self, event)
+
+    def eventFilter(self, source, event):
+        if event.type() ==  QEvent.Close and source is self.fields:
+            self.viewDock.setChecked(False)
+        return QDockWidget.eventFilter(self, source, event)
