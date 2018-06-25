@@ -1,13 +1,13 @@
 import subprocess
 import os
-import sys
 
 from facturx import *
 import json
+from datetime import datetime as dt
 
-from PyQt5.QtWidgets import (QMainWindow, QAction, QFileDialog, QFrame,
+from PyQt5.QtWidgets import (QMainWindow, QAction, QFileDialog, QLineEdit,
                              QLabel, QDockWidget, QSizePolicy, QGridLayout,
-                             QScrollArea, QWidget, QMessageBox)
+                             QScrollArea, QWidget, QMessageBox, QPushButton)
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt, QEvent
 
@@ -23,7 +23,7 @@ class InvoiceX(QMainWindow):
         self.height = 480
 
         self.fileLoaded = False
-
+        self.dialog = None
         self.initUI()
 
     def initUI(self):
@@ -116,6 +116,7 @@ class InvoiceX(QMainWindow):
 
         editFields = QAction('Edit Fields', self)
         editFields.setStatusTip('Edit Fields in XML')
+        editFields.triggered.connect(self.editFieldsDialog)
 
         documentation = QAction('Documentation', self)
         documentation.setStatusTip('Open Documentation for Invoice-X')
@@ -179,8 +180,17 @@ class InvoiceX(QMainWindow):
         self.fileLoaded = True
         self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(), self.square.size().height(),Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
+    def editFieldsDialog(self):
+        try:
+            self.dialog = EditFieldsClass(self.factx, self.fieldsDict, self.metadata_field)
+            self.dialog.installEventFilter(self)
+            # self.dialog.show()
+        except AttributeError:
+            QMessageBox.critical(self, 'File Not Found',
+                                 "Load a PDF first",
+                                 QMessageBox.Ok)
+
     def showFields(self):
-        print('showFields')
         self.factx.write_json('.load/output.json')
         with open('.load/output.json') as jsonFile:
             self.fieldsDict = json.load(jsonFile)
@@ -189,7 +199,7 @@ class InvoiceX(QMainWindow):
 
         i = 0
 
-        metadata_field = {
+        self.metadata_field = {
             'amount_tax': 'Amount Tax',
             'amount_total': 'Amount Total',
             'amount_untaxed': 'Amount Untaxed',
@@ -207,10 +217,17 @@ class InvoiceX(QMainWindow):
 
         for key in sorted(self.fieldsDict):
             i += 1
-            fieldKey = QLabel(metadata_field[key] + ": ")
+            try:
+                self.factx[key]
+            except IndexError:
+                self.fieldsDict[key] = "Field Not Specified"
+
+            fieldKey = QLabel(self.metadata_field[key] + ": ")
             if self.fieldsDict[key] is None:
                 fieldValue = QLabel("NA")
             else:
+                if key == "date":
+                    self.fieldsDict[key] = self.fieldsDict[key][:4] + "/" + self.fieldsDict[key][4:6] + "/" + self.fieldsDict[key][6:8]
                 fieldValue = QLabel(self.fieldsDict[key])
             # fieldValue.setFrameShape(QFrame.Panel)
             # fieldValue.setFrameShadow(QFrame.Plain)
@@ -250,6 +267,61 @@ class InvoiceX(QMainWindow):
             QMainWindow.resizeEvent(self, event)
 
     def eventFilter(self, source, event):
-        if event.type() ==  QEvent.Close and source is self.fields:
+        if event.type() == QEvent.Close and source is self.fields:
             self.viewDock.setChecked(False)
-        return QDockWidget.eventFilter(self, source, event)
+
+        if event.type() == QEvent.Close and source is self.dialog:
+            self.showFields()
+        return QMainWindow.eventFilter(self, source, event)
+
+
+class EditFieldsClass(QWidget, object):
+    def __init__(self, factx, fieldsDict, metadataDict):
+        super().__init__()
+        self.fDict = fieldsDict
+        self.mDict = metadataDict
+        self.factx = factx
+        self.initUI()
+
+    def initUI(self):
+        layout = QGridLayout()
+        i = 0
+        self.fieldsKeyList = []
+        self.fieldsValueList = []
+        for key in sorted(self.fDict):
+            i += 1
+            fKey = QLabel(self.mDict[key])
+            fValue = QLineEdit()
+            fValue.setText(self.fDict[key])
+            if self.fDict[key] == "Field Not Specified":
+                fValue.setEnabled(False)
+            else:
+                self.fieldsKeyList.append(key)
+                self.fieldsValueList.append(fValue)
+            layout.addWidget(fKey, i, 0)
+            layout.addWidget(fValue, i, 1)
+
+        i = i + 1
+        saveButton = QPushButton('Apply')
+        saveButton.clicked.connect(self.addToDock)
+        resetButton = QPushButton('Discard')
+        resetButton.clicked.connect(self.resetLabel)
+        layout.addWidget(resetButton, i, 0)
+        layout.addWidget(saveButton, i, 1)
+
+        self.setLayout(layout)
+        self.move(300, 150)
+        self.setWindowTitle('Edit Fields')
+        self.show()
+
+    def addToDock(self):
+        for key, value in zip(self.fieldsKeyList, self.fieldsValueList):
+            if key != "date":
+                self.factx[key] = value.text()
+            else:
+                self.factx[key] = dt.strptime(value.text(), '%Y/%m/%d')
+        
+        self.close()
+
+    def resetLabel(self):
+        self.close()
