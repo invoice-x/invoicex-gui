@@ -19,7 +19,9 @@ Working Features:
 
 - Preview Loaded PDF
 - Load metadata to right Dock
-- Edit Fields (Doesn't save it to PDF)
+- Edit Fields
+- Save PDF file
+
 .. image:: Screenshots/mainWindow.png
 
 .. image:: Screenshots/editDialog.png

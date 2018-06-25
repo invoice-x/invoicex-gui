@@ -46,6 +46,7 @@ class InvoiceX(QMainWindow):
         toolbar.addAction(self.openFile)
         toolbar.addAction(self.saveFile)
         toolbar.addAction(self.validateMetadata)
+        toolbar.addAction(self.editFields)
 
     def setCenterWidget(self):
         self.square = QLabel(self)
@@ -118,9 +119,9 @@ class InvoiceX(QMainWindow):
         addMetadata = QAction('Add Metadata', self)
         addMetadata.setStatusTip('Add metadata to PDF')
 
-        editFields = QAction('Edit Fields', self)
-        editFields.setStatusTip('Edit Fields in XML')
-        editFields.triggered.connect(self.editFieldsDialog)
+        self.editFields = QAction(QIcon('icons/edit.png'), 'Edit Metadata', self)
+        self.editFields.setStatusTip('Edit Metadata in XML')
+        self.editFields.triggered.connect(self.editFieldsDialog)
 
         documentation = QAction('Documentation', self)
         documentation.setStatusTip('Open Documentation for Invoice-X')
@@ -144,7 +145,7 @@ class InvoiceX(QMainWindow):
         exportMetadata.addAction(ymlFormat)
 
         commandMenu.addAction(self.validateMetadata)
-        commandMenu.addAction(editFields)
+        commandMenu.addAction(self.editFields)
         commandMenu.addAction(addMetadata)
         commandMenu.addAction(extractFields)
 
