@@ -1,5 +1,6 @@
 import subprocess
 import os
+import sys
 
 from facturx import *
 import json
@@ -178,7 +179,10 @@ class InvoiceX(QMainWindow):
         # print(str(fileName[0]))
         if not os.path.exists('.load'):
             os.mkdir('.load')
-        convert = ['convert', '-verbose', '-density', '150', '-trim',
+        if sys.platform[:3] == 'win':
+        	convert = ['magick', self.fileName[0], '-flatten', '.load/preview.jpg']
+        else:
+        	convert = ['convert', '-verbose', '-density', '150', '-trim',
                    self.fileName[0], '-quality', '100', '-flatten',
                    '-sharpen', '0x1.0', '.load/preview.jpg']
         subprocess.call(convert)
@@ -232,7 +236,7 @@ class InvoiceX(QMainWindow):
             if self.fieldsDict[key] is None:
                 fieldValue = QLabel("NA")
             else:
-                if key == "date":
+                if key[:4] == "date":
                     self.fieldsDict[key] = self.fieldsDict[key][:4] + "/" + self.fieldsDict[key][4:6] + "/" + self.fieldsDict[key][6:8]
                 fieldValue = QLabel(self.fieldsDict[key])
             # fieldValue.setFrameShape(QFrame.Panel)
@@ -339,7 +343,7 @@ class EditFieldsClass(QWidget, object):
 
     def addToDock(self):
         for key, value in zip(self.fieldsKeyList, self.fieldsValueList):
-            if key != "date":
+            if key[:4] != "date":
                 self.factx[key] = value.text()
             else:
                 self.factx[key] = dt.strptime(value.text(), '%Y/%m/%d')
