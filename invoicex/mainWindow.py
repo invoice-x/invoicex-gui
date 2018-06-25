@@ -82,8 +82,12 @@ class InvoiceX(QMainWindow):
 
         self.saveFile = QAction(QIcon('icons/save.png'), 'Save', self)
         self.saveFile.setShortcut('Ctrl+S')
-        self.saveFile.setStatusTip('Save File as a new File')
-        self.saveFile.triggered.connect(self.showSaveDialog)
+        self.saveFile.setStatusTip('Save File')
+        self.saveFile.triggered.connect(self.saveFileDialog)
+
+        self.saveAsFile = QAction('Save As', self)
+        self.saveAsFile.setStatusTip('Save File as a new File')
+        self.saveAsFile.triggered.connect(self.showSaveAsDialog)
 
         self.viewDock = QAction('View Dock', self, checkable=True)
         self.viewDock.setStatusTip('View Dock')
@@ -128,6 +132,7 @@ class InvoiceX(QMainWindow):
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(self.openFile)
         fileMenu.addAction(self.saveFile)
+        fileMenu.addAction(self.saveAsFile)
         fileMenu.addAction(self.viewDock)
         fileMenu.addAction(self.exitAct)
 
@@ -251,8 +256,25 @@ class InvoiceX(QMainWindow):
             # self.file_selected.setText(str(fname[0][0]))
             # self.file_names = fname[0]
 
-    def showSaveDialog(self):
-        pass
+    def saveFileDialog(self):
+        if self.fileLoaded:
+            self.factx.write_pdf(self.fileName[0])
+        else:
+            QMessageBox.critical(self, 'File Not Found',
+                                 "Load a PDF first",
+                                 QMessageBox.Ok)
+
+    def showSaveAsDialog(self):
+        if self.fileLoaded:
+            self.saveFileName = QFileDialog.getSaveFileName(self, 'Save file',
+                                                            os.path.expanduser("~"),
+                                                            "pdf (*.pdf)")
+            if self.saveFileName[0]:
+                self.factx.write_pdf(self.saveFileName[0])
+        else:
+            QMessageBox.critical(self, 'File Not Found',
+                                 "Load a PDF first",
+                                 QMessageBox.Ok)
 
     def extractFromPDF(self):
         pass
@@ -320,7 +342,6 @@ class EditFieldsClass(QWidget, object):
                 self.factx[key] = value.text()
             else:
                 self.factx[key] = dt.strptime(value.text(), '%Y/%m/%d')
-        
         self.close()
 
     def resetLabel(self):
