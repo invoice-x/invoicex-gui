@@ -180,11 +180,11 @@ class InvoiceX(QMainWindow):
         if not os.path.exists('.load'):
             os.mkdir('.load')
         if sys.platform[:3] == 'win':
-        	convert = ['magick', self.fileName[0], '-flatten', '.load/preview.jpg']
+            convert = ['magick', self.fileName[0], '-flatten', '.load/preview.jpg']
         else:
-        	convert = ['convert', '-verbose', '-density', '150', '-trim',
-                   self.fileName[0], '-quality', '100', '-flatten',
-                   '-sharpen', '0x1.0', '.load/preview.jpg']
+            convert = ['convert', '-verbose', '-density', '150', '-trim',
+                       self.fileName[0], '-quality', '100', '-flatten',
+                       '-sharpen', '0x1.0', '.load/preview.jpg']
         subprocess.call(convert)
         self.pdfPreview = '.load/preview.jpg'
         self.fileLoaded = True
@@ -231,12 +231,11 @@ class InvoiceX(QMainWindow):
                 self.factx[key]
             except IndexError:
                 self.fieldsDict[key] = "Field Not Specified"
-
             fieldKey = QLabel(self.metadata_field[key] + ": ")
             if self.fieldsDict[key] is None:
                 fieldValue = QLabel("NA")
             else:
-                if key[:4] == "date":
+                if key[:4] == "date" and self.fieldsDict[key] != "Field Not Specified":
                     self.fieldsDict[key] = self.fieldsDict[key][:4] + "/" + self.fieldsDict[key][4:6] + "/" + self.fieldsDict[key][6:8]
                 fieldValue = QLabel(self.fieldsDict[key])
             # fieldValue.setFrameShape(QFrame.Panel)
@@ -342,12 +341,17 @@ class EditFieldsClass(QWidget, object):
         self.show()
 
     def addToDock(self):
-        for key, value in zip(self.fieldsKeyList, self.fieldsValueList):
-            if key[:4] != "date":
-                self.factx[key] = value.text()
-            else:
-                self.factx[key] = dt.strptime(value.text(), '%Y/%m/%d')
-        self.close()
+        try:
+            for key, value in zip(self.fieldsKeyList, self.fieldsValueList):
+                if key[:4] != "date":
+                    self.factx[key] = value.text()
+                else:
+                    self.factx[key] = dt.strptime(value.text(), '%Y/%m/%d')
+            self.close()
+        except ValueError:
+            QMessageBox.critical(self, 'Invalid Field Value',
+                                 "Invalid Field Value(s)",
+                                 QMessageBox.Ok)
 
     def resetLabel(self):
         self.close()
