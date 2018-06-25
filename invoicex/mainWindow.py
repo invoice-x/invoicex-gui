@@ -1,6 +1,7 @@
 import subprocess
 import os
 import sys
+from distutils import spawn
 
 from facturx import *
 import json
@@ -30,6 +31,7 @@ class InvoiceX(QMainWindow):
     def initUI(self):
 
         # StatusBar
+
         self.statusBar()
         self.setStatusTip('Select a PDF to get started')
         self.setMenuBar()
@@ -41,6 +43,16 @@ class InvoiceX(QMainWindow):
         self.setWindowTitle('Invoice-X')
         self.setWindowIcon(QIcon('icons/logo.png'))
         self.show()
+
+        if not spawn.find_executable('convert'):
+            QMessageBox.critical(self, 'Import Error',
+                                 "Imagemagick is not installed",
+                                 QMessageBox.Ok)
+            if sys.platform[:3] == 'win':
+                if not spawn.find_executable('gswin32'):
+                    QMessageBox.critical(self, 'Import Error',
+                                         "GhostScript is not installed",
+                                         QMessageBox.Ok)
 
     def setToolBar(self):
         toolbar = self.addToolBar('File')
