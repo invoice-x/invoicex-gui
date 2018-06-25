@@ -19,8 +19,10 @@ Working Features:
 
 - Preview Loaded PDF
 - Load metadata to right Dock
-
+- Edit Fields (Doesn't save it to PDF)
 .. image:: Screenshot.png
+
+.. image:: Screenshot_edit.png
 
 Author
 ------
