@@ -192,7 +192,7 @@ class InvoiceX(QMainWindow):
         if not os.path.exists('.load'):
             os.mkdir('.load')
         if sys.platform[:3] == 'win':
-            convert = ['magick', self.fileName[0], '-flatten', '.load/preview.jpg']
+            convert = ['magick', setFloating.fileName[0], '-flatten', '.load/preview.jpg']
         else:
             convert = ['convert', '-verbose', '-density', '150', '-trim',
                        self.fileName[0], '-quality', '100', '-flatten',
@@ -243,6 +243,8 @@ class InvoiceX(QMainWindow):
                 self.factx[key]
             except IndexError:
                 self.fieldsDict[key] = "Field Not Specified"
+            except TypeError:
+                pass
             fieldKey = QLabel(self.metadata_field[key] + ": ")
             if self.fieldsDict[key] is None:
                 fieldValue = QLabel("NA")
