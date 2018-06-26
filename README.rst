@@ -21,6 +21,7 @@ Working Features:
 - Load metadata to right Dock
 - Edit Fields
 - Save PDF file
+- Export Metadata to json
 
 .. image:: Screenshots/mainWindow.png
 

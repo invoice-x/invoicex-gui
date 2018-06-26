@@ -2,6 +2,7 @@ import subprocess
 import os
 import sys
 from distutils import spawn
+import shutil
 
 from facturx import *
 import json
@@ -138,9 +139,11 @@ class InvoiceX(QMainWindow):
 
         documentation = QAction('Documentation', self)
         documentation.setStatusTip('Open Documentation for Invoice-X')
+        documentation.triggered.connect(self.documentationMenu)
 
         aboutApp = QAction('About', self)
         aboutApp.setStatusTip('Know about Invoice-X')
+        aboutApp.triggered.connect(self.aboutAppMenu)
 
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
@@ -251,7 +254,11 @@ class InvoiceX(QMainWindow):
             else:
                 if key[:4] == "date" and self.fieldsDict[key] != "Field Not Specified":
                     self.fieldsDict[key] = self.fieldsDict[key][:4] + "/" + self.fieldsDict[key][4:6] + "/" + self.fieldsDict[key][6:8]
-                fieldValue = QLabel(self.fieldsDict[key])
+                if self.fieldsDict[key] == "Field Not Specified":
+                    fieldValue = QLabel(self.fieldsDict[key])
+                    fieldValue.setStyleSheet("QLabel { color: #666666}")
+                else:
+                    fieldValue = QLabel(self.fieldsDict[key])
             # fieldValue.setFrameShape(QFrame.Panel)
             # fieldValue.setFrameShadow(QFrame.Plain)
             # fieldValue.setLineWidth(3)
@@ -297,8 +304,20 @@ class InvoiceX(QMainWindow):
     def extractFromPDF(self):
         pass
 
-    def exportFields(self, outputformat):
+    def documentationMenu(self):
         pass
+
+    def aboutAppMenu(self):
+        pass
+
+    def exportFields(self, outputformat):
+        if self.fileLoaded:
+            self.exportFileName = QFileDialog.getSaveFileName(self, 'Export file',
+                                                            os.path.expanduser("~") + '/output.%s' %outputformat,
+                                                            "%s (*.%s)" %(outputformat, outputformat))
+            if self.exportFileName[0]:
+                if outputformat is "json":
+                    self.factx.write_json(self.exportFileName[0])
 
     def resizeEvent(self, event):
         if self.fileLoaded:
@@ -313,6 +332,9 @@ class InvoiceX(QMainWindow):
         if event.type() == QEvent.Close and source is self.dialog:
             self.showFields()
         return QMainWindow.eventFilter(self, source, event)
+
+    def closeEvent(self, event):
+        shutil.rmtree('.load/')
 
 
 class EditFieldsClass(QWidget, object):
@@ -352,6 +374,7 @@ class EditFieldsClass(QWidget, object):
         self.setLayout(layout)
         self.move(300, 150)
         self.setWindowTitle('Edit Fields')
+        self.setWindowIcon(QIcon('icons/logo.png'))
         self.show()
 
     def addToDock(self):
