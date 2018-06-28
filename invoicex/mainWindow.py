@@ -195,7 +195,7 @@ class InvoiceX(QMainWindow):
         if not os.path.exists('.load'):
             os.mkdir('.load')
         if sys.platform[:3] == 'win':
-            convert = ['magick', setFloating.fileName[0], '-flatten', '.load/preview.jpg']
+            convert = ['magick', self.fileName[0], '-flatten', '.load/preview.jpg']
         else:
             convert = ['convert', '-verbose', '-density', '150', '-trim',
                        self.fileName[0], '-quality', '100', '-flatten',
