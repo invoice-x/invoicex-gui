@@ -313,6 +313,10 @@ class InvoiceX(QMainWindow):
             if self.exportFileName[0]:
                 if outputformat is "json":
                     self.factx.write_json(self.exportFileName[0])
+                elif outputformat is "xml":
+                    self.factx.write_xml(self.exportFileName[0])
+                elif outputformat is "yml":
+                    self.factx.write_yml(self.exportFileName[0])
 
     def resizeEvent(self, event):
         if self.fileLoaded:
