@@ -333,7 +333,8 @@ class InvoiceX(QMainWindow):
         return QMainWindow.eventFilter(self, source, event)
 
     def closeEvent(self, event):
-        shutil.rmtree('.load/')
+        if os.path.isdir('.load'):
+            shutil.rmtree('.load/')
 
 
 class EditFieldsClass(QWidget, object):
