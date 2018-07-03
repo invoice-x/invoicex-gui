@@ -1,0 +1,112 @@
+<rsm:CrossIndustryDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rsm="urn:ferd:CrossIndustryDocument:invoice:1p0" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:12" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:15">
+	<rsm:SpecifiedExchangedDocumentContext>
+		<ram:TestIndicator><udt:Indicator>true</udt:Indicator></ram:TestIndicator><!-- Im Echtbetrieb muss der TestIndicator entweder vollst&#228;ndig entfallen oder auf false stehen. -->
+		<ram:GuidelineSpecifiedDocumentContextParameter>
+			<ram:ID>urn:ferd:CrossIndustryDocument:invoice:1p0:basic</ram:ID>
+		</ram:GuidelineSpecifiedDocumentContextParameter>
+	</rsm:SpecifiedExchangedDocumentContext>
+	<rsm:HeaderExchangedDocument>
+		<ram:ID>471102</ram:ID>
+		<ram:Name>RECHNUNG</ram:Name>
+		<ram:TypeCode>380</ram:TypeCode>
+		<ram:IssueDateTime><udt:DateTimeString format="102">20130305</udt:DateTimeString></ram:IssueDateTime>
+		<ram:IncludedNote>
+			<ram:Content>Rechnung gem&#228;&#223; Bestellung vom 01.03.2013.</ram:Content>
+		</ram:IncludedNote>
+		<ram:IncludedNote>
+			<ram:Content>Lieferant GmbH				
+Lieferantenstra&#223;e 20				
+80333 M&#252;nchen				
+Deutschland				
+Gesch&#228;ftsf&#252;hrer: Hans Muster
+Handelsregisternummer: H A 123
+</ram:Content>
+		</ram:IncludedNote>
+		<ram:IncludedNote>
+			<ram:Content>Unsere GLN: 4000001123452
+Ihre GLN: 4000001987658
+Ihre Kundennummer: GE2020211
+
+
+Zahlbar innerhalb 30 Tagen netto bis 04.04.2013, 3% Skonto innerhalb 10 Tagen bis 15.03.2013.</ram:Content>
+		</ram:IncludedNote>
+	</rsm:HeaderExchangedDocument>
+	<rsm:SpecifiedSupplyChainTradeTransaction>
+		<ram:ApplicableSupplyChainTradeAgreement>
+			<ram:SellerTradeParty>
+				<ram:Name>Lieferant GmbH</ram:Name>
+				<ram:PostalTradeAddress>
+					<ram:PostcodeCode>80333</ram:PostcodeCode>
+					<ram:LineOne>Lieferantenstra&#223;e 20</ram:LineOne>
+					<ram:CityName>M&#252;nchen</ram:CityName>
+					<ram:CountryID>DE</ram:CountryID>
+				</ram:PostalTradeAddress>
+				<ram:SpecifiedTaxRegistration>
+					<ram:ID schemeID="FC">201/113/40209</ram:ID>
+				</ram:SpecifiedTaxRegistration>
+				<ram:SpecifiedTaxRegistration>
+					<ram:ID schemeID="VA">DE123456789</ram:ID>
+				</ram:SpecifiedTaxRegistration>
+			</ram:SellerTradeParty>
+			<ram:BuyerTradeParty>
+				<ram:Name>Kunden AG Mitte</ram:Name>
+				<ram:PostalTradeAddress>
+					<ram:PostcodeCode>69876</ram:PostcodeCode>
+					<ram:LineOne>Hans Muster</ram:LineOne>
+					<ram:LineTwo>Kundenstra&#223;e 15</ram:LineTwo>
+					<ram:CityName>Frankfurt</ram:CityName>
+					<ram:CountryID>DE</ram:CountryID>
+				</ram:PostalTradeAddress>
+			</ram:BuyerTradeParty>
+		</ram:ApplicableSupplyChainTradeAgreement>
+		<ram:ApplicableSupplyChainTradeDelivery>
+			<ram:ActualDeliverySupplyChainEvent>
+				<ram:OccurrenceDateTime><udt:DateTimeString format="102">20130305</udt:DateTimeString> </ram:OccurrenceDateTime>
+			</ram:ActualDeliverySupplyChainEvent>
+		</ram:ApplicableSupplyChainTradeDelivery>
+		<ram:ApplicableSupplyChainTradeSettlement>
+			<ram:PaymentReference>2013-471102</ram:PaymentReference>
+			<ram:InvoiceCurrencyCode>EUR</ram:InvoiceCurrencyCode>
+			<ram:SpecifiedTradeSettlementPaymentMeans>
+				<ram:PayeePartyCreditorFinancialAccount>
+					<ram:IBANID>DE08700901001234567890</ram:IBANID>
+				</ram:PayeePartyCreditorFinancialAccount>
+				<ram:PayeeSpecifiedCreditorFinancialInstitution>
+					<ram:BICID>GENODEF1M04</ram:BICID>
+				</ram:PayeeSpecifiedCreditorFinancialInstitution>
+			</ram:SpecifiedTradeSettlementPaymentMeans>
+			<ram:ApplicableTradeTax>
+				<ram:CalculatedAmount currencyID="EUR">37.62</ram:CalculatedAmount>
+				<ram:TypeCode>VAT</ram:TypeCode>
+				<ram:BasisAmount currencyID="EUR">198.00</ram:BasisAmount>
+				<ram:ApplicablePercent>19.00</ram:ApplicablePercent>
+			</ram:ApplicableTradeTax>
+			<ram:SpecifiedTradeSettlementMonetarySummation>
+				<ram:LineTotalAmount currencyID="EUR">198.00</ram:LineTotalAmount>
+				<ram:ChargeTotalAmount currencyID="EUR">0.00</ram:ChargeTotalAmount>
+				<ram:AllowanceTotalAmount currencyID="EUR">0.00</ram:AllowanceTotalAmount>
+				<ram:TaxBasisTotalAmount currencyID="EUR">198.00</ram:TaxBasisTotalAmount>
+				<ram:TaxTotalAmount currencyID="EUR">37.62</ram:TaxTotalAmount>
+				<ram:GrandTotalAmount currencyID="EUR">235.62</ram:GrandTotalAmount>
+			</ram:SpecifiedTradeSettlementMonetarySummation>
+		</ram:ApplicableSupplyChainTradeSettlement>
+		<ram:IncludedSupplyChainTradeLineItem>
+			<ram:AssociatedDocumentLineDocument/>
+			<ram:SpecifiedSupplyChainTradeDelivery>
+				<ram:BilledQuantity unitCode="C62">20.0000</ram:BilledQuantity>
+			</ram:SpecifiedSupplyChainTradeDelivery>
+			<ram:SpecifiedSupplyChainTradeSettlement>
+				<ram:SpecifiedTradeSettlementMonetarySummation>
+					<ram:LineTotalAmount currencyID="EUR">198.00</ram:LineTotalAmount>
+				</ram:SpecifiedTradeSettlementMonetarySummation>
+			</ram:SpecifiedSupplyChainTradeSettlement>
+			<ram:SpecifiedTradeProduct>
+				<ram:GlobalID schemeID="0160">4012345001235</ram:GlobalID>
+				<ram:SellerAssignedID>TB100A4</ram:SellerAssignedID>
+				<ram:Name>GTIN: 4012345001235
+Unsere Art.-Nr.: TB100A4
+Trennbl&#228;tter A4</ram:Name>
+			</ram:SpecifiedTradeProduct>
+		</ram:IncludedSupplyChainTradeLineItem>
+	</rsm:SpecifiedSupplyChainTradeTransaction>
+</rsm:CrossIndustryDocument>

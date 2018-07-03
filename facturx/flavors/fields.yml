@@ -1,0 +1,73 @@
+# This file maps XML paths to human-readable field names for the most important fields.
+# Names from https://github.com/OCA/edi/blob/10.0/account_invoice_import/wizard/account_invoice_import.py#L77
+---
+version:
+    _path:
+        factur-x: //rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID
+        zugferd: //rsm:SpecifiedExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID
+        ubl: //cbc:ProfileID
+    _required: true
+    _default: urn:ferd:CrossIndustryDocument:invoice:1p0:basic
+invoice_number:
+    _path:
+        factur-x: //rsm:ExchangedDocument/ram:ID
+        zugferd: //rsm:HeaderExchangedDocument/ram:ID
+    _required: true
+date:
+    _path:
+        factur-x: //rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString
+        zugferd: //rsm:HeaderExchangedDocument/ram:IssueDateTime/udt:DateTimeString
+    _required: true
+date_due:
+    _path:
+        factur-x: //rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString
+        zugferd: //rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString
+    _required: false
+name:
+    _path:
+        factur-x: //rsm:ExchangedDocument/ram:Name
+        zugferd: //rsm:HeaderExchangedDocument/ram:Name
+    _default: invoice
+    _required: true
+type:
+    _path:
+        factur-x: //rsm:ExchangedDocument/ram:TypeCode
+        zugferd: //rsm:HeaderExchangedDocument/ram:TypeCode
+    _required: true
+    _default: 380
+currency:
+    _path:
+        factur-x: //rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceCurrencyCode
+        zugferd: //rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:InvoiceCurrencyCode
+    _required: true
+    _default: EUR
+amount_untaxed:
+    _path: 
+        factur-x: //rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:LineTotalAmount
+        zugferd: //rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:LineTotalAmount
+    _required: true
+amount_tax:
+    _path:
+        factur-x: //rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount
+        zugferd: //rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:TaxTotalAmount
+    _required: true
+amount_total:
+    _path:
+        factur-x: //rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:GrandTotalAmount
+        zugferd: //rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeSettlement/ram:SpecifiedTradeSettlementMonetarySummation/ram:GrandTotalAmount
+    _required: true
+notes:
+    _path:
+        factur-x: //rsm:HeaderExchangedDocument/ram:IncludedNote/ram:Content
+        zugferd: //rsm:ExchangedDocument/ram:IncludedNote/ram:Content
+    _required: false
+seller:
+    _path:
+        factur-x: //rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:Name
+        zugferd: //rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:SellerTradeParty/ram:Name
+    _required: true
+buyer:
+    _path:
+        factur-x: //rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:Name
+        zugferd: //rsm:SpecifiedSupplyChainTradeTransaction/ram:ApplicableSupplyChainTradeAgreement/ram:BuyerTradeParty/ram:Name
+    _required: true

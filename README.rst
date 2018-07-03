@@ -10,6 +10,17 @@ Graphical User Interface for `factur-x <https://github.com/invoice-x/factur-x>`_
 
 The application is built using `PyQt5 <https://www.riverbankcomputing.com/software/pyqt/intro>`_
 
+Requirements
+------------
+```
+pip install pyqt5 lxml PyPDF2 PyYAML
+```
+
+External Dependencies:
+
+- Imagemagick
+- GhostScript
+
 Status
 ------
 
