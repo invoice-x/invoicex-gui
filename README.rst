@@ -21,6 +21,13 @@ External Dependencies:
 - Imagemagick
 - GhostScript
 
+Running
+-------
+
+::
+
+    $ python main.py
+
 Status
 ------
 
