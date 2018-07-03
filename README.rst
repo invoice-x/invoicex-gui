@@ -14,7 +14,7 @@ Requirements
 ------------
 ::
 
-  pip install pyqt5 lxml PyPDF2 PyYAML
+ $ pip install pyqt5 lxml PyPDF2 PyYAML
 
 External Dependencies:
 
