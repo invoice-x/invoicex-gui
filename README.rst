@@ -12,9 +12,6 @@ The application is built using `PyQt5 <https://www.riverbankcomputing.com/softwa
 
 Requirements
 ------------
-::
-
- $ pip install pyqt5 lxml PyPDF2 PyYAML
 
 External Dependencies:
 
@@ -26,6 +23,9 @@ Running
 
 ::
 
+    $ git clone https://github.com/invoice-x/invoicex-gui.git
+    $ cd invoicex-gui
+    $ python setup.py install
     $ python main.py
 
 Status
