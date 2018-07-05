@@ -25,8 +25,8 @@ Running
 
     $ git clone https://github.com/invoice-x/invoicex-gui.git
     $ cd invoicex-gui
-    $ python setup.py install
-    $ python main.py
+    $ pip install -r requirements.txt
+    $ python invoicex/main.py
 
 Status
 ------
