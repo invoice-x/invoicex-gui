@@ -200,7 +200,7 @@ class InvoiceX(QMainWindow):
         subprocess.call(convert)
         self.pdfPreview = '.load/preview.jpg'
         self.fileLoaded = True
-        self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(), self.square.size().height(),Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(), self.square.size().height(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
     def editFieldsDialog(self):
         try:
@@ -280,11 +280,20 @@ class InvoiceX(QMainWindow):
 
     def saveFileDialog(self):
         if self.fileLoaded:
-            self.factx.write_pdf(self.fileName[0])
+            if self.confirmSaveDialog():
+                self.factx.write_pdf(self.fileName[0])
         else:
             QMessageBox.critical(self, 'File Not Found',
                                  "Load a PDF first",
                                  QMessageBox.Ok)
+
+    def confirmSaveDialog(self):
+        reply = QMessageBox.question(self, 'Message', "Do you want to save? This cannot be undone", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            return True
+        else:
+            return False
 
     def showSaveAsDialog(self):
         if self.fileLoaded:
@@ -292,7 +301,11 @@ class InvoiceX(QMainWindow):
                                                             os.path.expanduser("~"),
                                                             "pdf (*.pdf)")
             if self.saveFileName[0]:
-                self.factx.write_pdf(self.saveFileName[0])
+                if self.saveFileName[0].endswith('.pdf'):
+                    fileName = self.saveFileName[0]
+                else:
+                    fileName = self.saveFileName[0] + '.pdf'
+                self.factx.write_pdf(fileName)
         else:
             QMessageBox.critical(self, 'File Not Found',
                                  "Load a PDF first",
@@ -319,6 +332,10 @@ class InvoiceX(QMainWindow):
                     self.factx.write_xml(self.exportFileName[0])
                 elif outputformat is "yml":
                     self.factx.write_yml(self.exportFileName[0])
+        else:
+            QMessageBox.critical(self, 'File Not Found',
+                                 "Load a PDF first",
+                                 QMessageBox.Ok)
 
     def resizeEvent(self, event):
         if self.fileLoaded:
