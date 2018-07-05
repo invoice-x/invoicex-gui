@@ -1,6 +1,8 @@
+import sys
+from PyQt5.QtWidgets import QApplication
+
 import subprocess
 import os
-import sys
 from distutils import spawn
 import shutil
 
@@ -42,7 +44,7 @@ class InvoiceX(QMainWindow):
 
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setWindowTitle('Invoice-X')
-        self.setWindowIcon(QIcon('icons/logo.png'))
+        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'icons/logo.ico')))
         self.show()
 
         if not spawn.find_executable('convert'):
@@ -80,17 +82,17 @@ class InvoiceX(QMainWindow):
         self.addDockWidget(Qt.RightDockWidgetArea, self.fields)
 
     def setMenuBar(self):
-        self.exitAct = QAction(QIcon('icons/exit.png'), 'Exit', self)
+        self.exitAct = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/exit.png')), 'Exit', self)
         self.exitAct.setShortcut('Ctrl+Q')
         self.exitAct.setStatusTip('Exit application')
         self.exitAct.triggered.connect(self.close)
 
-        self.openFile = QAction(QIcon('icons/pdf.png'), 'Open', self)
+        self.openFile = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/pdf.png')), 'Open', self)
         self.openFile.setShortcut('Ctrl+O')
         self.openFile.setStatusTip('Open new File')
         self.openFile.triggered.connect(self.showFileDialog)
 
-        self.saveFile = QAction(QIcon('icons/save.png'), 'Save', self)
+        self.saveFile = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/save.png')), 'Save', self)
         self.saveFile.setShortcut('Ctrl+S')
         self.saveFile.setStatusTip('Save File')
         self.saveFile.triggered.connect(self.saveFileDialog)
@@ -99,8 +101,8 @@ class InvoiceX(QMainWindow):
         self.saveAsFile.setStatusTip('Save File as a new File')
         self.saveAsFile.triggered.connect(self.showSaveAsDialog)
 
-        self.viewDock = QAction('View Dock', self, checkable=True)
-        self.viewDock.setStatusTip('View Dock')
+        self.viewDock = QAction('View Fields', self, checkable=True)
+        self.viewDock.setStatusTip('View Fields')
         self.viewDock.setChecked(True)
         self.viewDock.triggered.connect(self.viewDockToggle)
 
@@ -120,7 +122,7 @@ class InvoiceX(QMainWindow):
         ymlFormat.setStatusTip('Export file to YML')
         ymlFormat.triggered.connect(lambda: self.exportFields('yml'))
 
-        self.validateMetadata = QAction(QIcon('icons/validate.png'),
+        self.validateMetadata = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/validate.png')),
                                         'Validate', self)
         self.validateMetadata.setStatusTip('Validate XML')
         self.validateMetadata.triggered.connect(self.validateXML)
@@ -128,7 +130,7 @@ class InvoiceX(QMainWindow):
         addMetadata = QAction('Add Metadata', self)
         addMetadata.setStatusTip('Add metadata to PDF')
 
-        self.editFields = QAction(QIcon('icons/edit.png'), 'Edit Metadata', self)
+        self.editFields = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/edit.png')), 'Edit Metadata', self)
         self.editFields.setStatusTip('Edit Metadata in XML')
         self.editFields.triggered.connect(self.editFieldsDialog)
 
@@ -392,3 +394,13 @@ class EditFieldsClass(QWidget, object):
 
     def resetLabel(self):
         self.close()
+
+
+def main():
+    app = QApplication(sys.argv)
+    window = InvoiceX()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
