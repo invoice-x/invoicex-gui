@@ -22,10 +22,10 @@ class InvoiceX(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.left = 300
-        self.top = 300
-        self.width = 680
-        self.height = 480
+        self.mainWindowLeft = 300
+        self.mainWindowTop = 300
+        self.mainWindowWidth = 680
+        self.mainWindowHeight = 480
 
         self.fileLoaded = False
         self.dialog = None
@@ -37,14 +37,16 @@ class InvoiceX(QMainWindow):
 
         self.statusBar()
         self.setStatusTip('Select a PDF to get started')
-        self.setMenuBar()
-        self.setDockViewRight()
-        self.setCenterWidget()
-        self.setToolBar()
+        self.set_menu_bar()
+        self.set_dockview_fields()
+        self.set_center_widget()
+        self.set_toolbar()
 
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setGeometry(self.mainWindowLeft, self.mainWindowTop,
+                         self.mainWindowWidth, self.mainWindowHeight)
         self.setWindowTitle('Invoice-X')
-        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'icons/logo.ico')))
+        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__),
+                                              'icons/logo.ico')))
         self.show()
 
         if not spawn.find_executable('convert'):
@@ -52,19 +54,19 @@ class InvoiceX(QMainWindow):
                                  "Imagemagick is not installed",
                                  QMessageBox.Ok)
 
-    def setToolBar(self):
+    def set_toolbar(self):
         toolbar = self.addToolBar('File')
         toolbar.addAction(self.openFile)
         toolbar.addAction(self.saveFile)
         toolbar.addAction(self.validateMetadata)
         toolbar.addAction(self.editFields)
 
-    def setCenterWidget(self):
+    def set_center_widget(self):
         self.square = QLabel(self)
         self.square.setAlignment(Qt.AlignCenter)
         self.setCentralWidget(self.square)
 
-    def setDockViewRight(self):
+    def set_dockview_fields(self):
         self.fields = QDockWidget("Fields", self)
         self.fields.installEventFilter(self)
         self.fieldsQWidget = QWidget()
@@ -81,66 +83,72 @@ class InvoiceX(QMainWindow):
         self.fields.setStyleSheet("QWidget { background-color: #AAB2BD}")
         self.addDockWidget(Qt.RightDockWidgetArea, self.fields)
 
-    def setMenuBar(self):
-        self.exitAct = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/exit.png')), 'Exit', self)
+    def set_menu_bar(self):
+        self.exitAct = QAction(QIcon(os.path.join(
+            os.path.dirname(__file__), 'icons/exit.png')), 'Exit', self)
         self.exitAct.setShortcut('Ctrl+Q')
         self.exitAct.setStatusTip('Exit application')
         self.exitAct.triggered.connect(self.close)
 
-        self.openFile = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/pdf.png')), 'Open', self)
+        self.openFile = QAction(QIcon(os.path.join(
+            os.path.dirname(__file__), 'icons/pdf.png')), 'Open', self)
         self.openFile.setShortcut('Ctrl+O')
         self.openFile.setStatusTip('Open new File')
-        self.openFile.triggered.connect(self.showFileDialog)
+        self.openFile.triggered.connect(self.show_file_dialog)
 
-        self.saveFile = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/save.png')), 'Save', self)
+        self.saveFile = QAction(QIcon(os.path.join(
+            os.path.dirname(__file__), 'icons/save.png')), 'Save', self)
         self.saveFile.setShortcut('Ctrl+S')
         self.saveFile.setStatusTip('Save File')
-        self.saveFile.triggered.connect(self.saveFileDialog)
+        self.saveFile.triggered.connect(self.save_file_dialog)
 
         self.saveAsFile = QAction('Save As', self)
         self.saveAsFile.setStatusTip('Save File as a new File')
-        self.saveAsFile.triggered.connect(self.showSaveAsDialog)
+        self.saveAsFile.triggered.connect(self.show_save_as_dialog)
 
         self.viewDock = QAction('View Fields', self, checkable=True)
         self.viewDock.setStatusTip('View Fields')
         self.viewDock.setChecked(True)
-        self.viewDock.triggered.connect(self.viewDockToggle)
+        self.viewDock.triggered.connect(self.view_dock_field_toggle)
 
         extractFields = QAction('Extract Fields', self)
         extractFields.setStatusTip('Extract Fields from PDF and add to XML')
-        extractFields.triggered.connect(self.extractFromPDF)
+        extractFields.triggered.connect(self.extract_fields_from_pdf)
 
         jsonFormat = QAction('JSON', self)
         jsonFormat.setStatusTip('Export file to JSON')
-        jsonFormat.triggered.connect(lambda: self.exportFields('json'))
+        jsonFormat.triggered.connect(lambda: self.export_fields('json'))
 
         xmlFormat = QAction('XML', self)
         xmlFormat.setStatusTip('Export file to XML')
-        xmlFormat.triggered.connect(lambda: self.exportFields('xml'))
+        xmlFormat.triggered.connect(lambda: self.export_fields('xml'))
 
         ymlFormat = QAction('YML', self)
         ymlFormat.setStatusTip('Export file to YML')
-        ymlFormat.triggered.connect(lambda: self.exportFields('yml'))
+        ymlFormat.triggered.connect(lambda: self.export_fields('yml'))
 
-        self.validateMetadata = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/validate.png')),
-                                        'Validate', self)
+        self.validateMetadata = QAction(QIcon(os.path.join(
+            os.path.dirname(__file__), 'icons/validate.png')),
+            'Validate', self)
         self.validateMetadata.setStatusTip('Validate XML')
-        self.validateMetadata.triggered.connect(self.validateXML)
+        self.validateMetadata.triggered.connect(self.validate_xml)
 
         addMetadata = QAction('Add Metadata', self)
         addMetadata.setStatusTip('Add metadata to PDF')
 
-        self.editFields = QAction(QIcon(os.path.join(os.path.dirname(__file__), 'icons/edit.png')), 'Edit Metadata', self)
+        self.editFields = QAction(QIcon(
+            os.path.join(os.path.dirname(__file__), 'icons/edit.png')),
+            'Edit Metadata', self)
         self.editFields.setStatusTip('Edit Metadata in XML')
-        self.editFields.triggered.connect(self.editFieldsDialog)
+        self.editFields.triggered.connect(self.edit_fields_dialog)
 
         documentation = QAction('Documentation', self)
         documentation.setStatusTip('Open Documentation for Invoice-X')
-        documentation.triggered.connect(self.documentationMenu)
+        documentation.triggered.connect(self.documentation_menubar)
 
         aboutApp = QAction('About', self)
         aboutApp.setStatusTip('Know about Invoice-X')
-        aboutApp.triggered.connect(self.aboutAppMenu)
+        aboutApp.triggered.connect(self.about_app_menubar)
 
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
@@ -166,13 +174,13 @@ class InvoiceX(QMainWindow):
         helpMenu.addAction(documentation)
         helpMenu.addAction(aboutApp)
 
-    def viewDockToggle(self, state):
+    def view_dock_field_toggle(self, state):
         if state:
             self.fields.show()
         else:
             self.fields.hide()
 
-    def validateXML(self):
+    def validate_xml(self):
         try:
             if self.factx.is_valid():
                 QMessageBox.information(self, 'Valid XML',
@@ -187,24 +195,29 @@ class InvoiceX(QMainWindow):
                                  "Load a PDF first",
                                  QMessageBox.Ok)
 
-    def setPdfPreview(self):
+    def set_pdf_preview(self):
         # print(str(fileName[0]))
         if not os.path.exists('.load'):
             os.mkdir('.load')
         if sys.platform[:3] == 'win':
-            convert = ['magick', self.fileName[0], '-flatten', '.load/preview.jpg']
+            convert = ['magick', self.fileName[0],
+                       '-flatten', '.load/preview.jpg']
         else:
             convert = ['convert', '-verbose', '-density', '150', '-trim',
                        self.fileName[0], '-quality', '100', '-flatten',
                        '-sharpen', '0x1.0', '.load/preview.jpg']
         subprocess.call(convert)
-        self.pdfPreview = '.load/preview.jpg'
+        self.pdfPreviewImage = '.load/preview.jpg'
         self.fileLoaded = True
-        self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(), self.square.size().height(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.square.setPixmap(QPixmap(self.pdfPreviewImage).scaled(
+            self.square.size().width(), self.square.size().height(),
+            Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-    def editFieldsDialog(self):
+    def edit_fields_dialog(self):
         try:
-            self.dialog = EditFieldsClass(self.factx, self.fieldsDict, self.metadata_field)
+            self.dialog = EditFieldsClass(self.factx,
+                                          self.fieldsDict,
+                                          self.metadata_field)
             self.dialog.installEventFilter(self)
             # self.dialog.show()
         except AttributeError:
@@ -212,7 +225,7 @@ class InvoiceX(QMainWindow):
                                  "Load a PDF first",
                                  QMessageBox.Ok)
 
-    def showFields(self):
+    def update_dock_fields(self):
         self.factx.write_json('.load/output.json')
         with open('.load/output.json') as jsonFile:
             self.fieldsDict = json.load(jsonFile)
@@ -249,8 +262,11 @@ class InvoiceX(QMainWindow):
             if self.fieldsDict[key] is None:
                 fieldValue = QLabel("NA")
             else:
-                if key[:4] == "date" and self.fieldsDict[key] != "Field Not Specified":
-                    self.fieldsDict[key] = self.fieldsDict[key][:4] + "/" + self.fieldsDict[key][4:6] + "/" + self.fieldsDict[key][6:8]
+                if key[:4] == "date" and \
+                        self.fieldsDict[key] != "Field Not Specified":
+                    self.fieldsDict[key] = self.fieldsDict[key][:4] \
+                        + "/" + self.fieldsDict[key][4:6] \
+                        + "/" + self.fieldsDict[key][6:8]
                 if self.fieldsDict[key] == "Field Not Specified":
                     fieldValue = QLabel(self.fieldsDict[key])
                     fieldValue.setStyleSheet("QLabel { color: #666666}")
@@ -262,7 +278,7 @@ class InvoiceX(QMainWindow):
             self.layout.addWidget(fieldKey, i, 0)
             self.layout.addWidget(fieldValue, i, 1)
 
-    def showFileDialog(self):
+    def show_file_dialog(self):
 
         self.fileName = QFileDialog.getOpenFileName(self, 'Open file',
                                                     os.path.expanduser("~"),
@@ -271,35 +287,36 @@ class InvoiceX(QMainWindow):
         if self.fileName[0]:
             # print(fileName[0])
             self.factx = FacturX(self.fileName[0])
-            self.setPdfPreview()
-            self.showFields()
+            self.set_pdf_preview()
+            self.update_dock_fields()
             self.setStatusTip("PDF is Ready")
 
             # self.file_selected.setText(str(fname[0][0]))
             # self.file_names = fname[0]
 
-    def saveFileDialog(self):
+    def save_file_dialog(self):
         if self.fileLoaded:
-            if self.confirmSaveDialog():
+            if self.confirm_save_dialog():
                 self.factx.write_pdf(self.fileName[0])
         else:
             QMessageBox.critical(self, 'File Not Found',
                                  "Load a PDF first",
                                  QMessageBox.Ok)
 
-    def confirmSaveDialog(self):
-        reply = QMessageBox.question(self, 'Message', "Do you want to save? This cannot be undone", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+    def confirm_save_dialog(self):
+        reply = QMessageBox.question(
+            self, 'Message', "Do you want to save? This cannot be undone",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             return True
         else:
             return False
 
-    def showSaveAsDialog(self):
+    def show_save_as_dialog(self):
         if self.fileLoaded:
-            self.saveFileName = QFileDialog.getSaveFileName(self, 'Save file',
-                                                            os.path.expanduser("~"),
-                                                            "pdf (*.pdf)")
+            self.saveFileName = QFileDialog.getSaveFileName(
+                self, 'Save file', os.path.expanduser("~"), "pdf (*.pdf)")
             if self.saveFileName[0]:
                 if self.saveFileName[0].endswith('.pdf'):
                     fileName = self.saveFileName[0]
@@ -311,20 +328,22 @@ class InvoiceX(QMainWindow):
                                  "Load a PDF first",
                                  QMessageBox.Ok)
 
-    def extractFromPDF(self):
+    def extract_fields_from_pdf(self):
         pass
 
-    def documentationMenu(self):
+    def documentation_menubar(self):
         pass
 
-    def aboutAppMenu(self):
+    def about_app_menubar(self):
         pass
 
-    def exportFields(self, outputformat):
+    def export_fields(self, outputformat):
         if self.fileLoaded:
-            self.exportFileName = QFileDialog.getSaveFileName(self, 'Export file',
-                                                            os.path.expanduser("~") + '/output.%s' %outputformat,
-                                                            "%s (*.%s)" %(outputformat, outputformat))
+            self.exportFileName = QFileDialog.getSaveFileName(
+                self, 'Export file',
+                os.path.expanduser("~") +
+                '/output.%s' % outputformat,
+                "%s (*.%s)" % (outputformat, outputformat))
             if self.exportFileName[0]:
                 if outputformat is "json":
                     self.factx.write_json(self.exportFileName[0])
@@ -339,7 +358,9 @@ class InvoiceX(QMainWindow):
 
     def resizeEvent(self, event):
         if self.fileLoaded:
-            self.square.setPixmap(QPixmap(self.pdfPreview).scaled(self.square.size().width(),self.square.size().height(),Qt.KeepAspectRatio , Qt.SmoothTransformation))
+            self.square.setPixmap(QPixmap(self.pdfPreviewImage).scaled(
+                self.square.size().width(), self.square.size().height(),
+                Qt.KeepAspectRatio, Qt.SmoothTransformation))
             self.square.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Ignored)
             QMainWindow.resizeEvent(self, event)
 
@@ -348,7 +369,7 @@ class InvoiceX(QMainWindow):
             self.viewDock.setChecked(False)
 
         if event.type() == QEvent.Close and source is self.dialog:
-            self.showFields()
+            self.update_dock_fields()
         return QMainWindow.eventFilter(self, source, event)
 
     def closeEvent(self, event):
@@ -384,10 +405,10 @@ class EditFieldsClass(QWidget, object):
 
         i = i + 1
         saveButton = QPushButton('Apply')
-        saveButton.clicked.connect(self.addToDock)
-        resetButton = QPushButton('Discard')
-        resetButton.clicked.connect(self.resetLabel)
-        layout.addWidget(resetButton, i, 0)
+        saveButton.clicked.connect(self.update_fields_and_dock)
+        discardButton = QPushButton('Discard')
+        discardButton.clicked.connect(self.discard_fields)
+        layout.addWidget(discardButton, i, 0)
         layout.addWidget(saveButton, i, 1)
 
         self.setLayout(layout)
@@ -396,7 +417,7 @@ class EditFieldsClass(QWidget, object):
         self.setWindowIcon(QIcon('icons/logo.png'))
         self.show()
 
-    def addToDock(self):
+    def update_fields_and_dock(self):
         try:
             for key, value in zip(self.fieldsKeyList, self.fieldsValueList):
                 if key[:4] != "date":
@@ -409,13 +430,13 @@ class EditFieldsClass(QWidget, object):
                                  "Invalid Field Value(s)",
                                  QMessageBox.Ok)
 
-    def resetLabel(self):
+    def discard_fields(self):
         self.close()
 
 
 def main():
     app = QApplication(sys.argv)
-    window = InvoiceX()
+    InvoiceX()
     sys.exit(app.exec_())
 
 
