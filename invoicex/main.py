@@ -5,16 +5,21 @@ import subprocess
 import os
 from distutils import spawn
 import shutil
+from lxml import etree
 
-from facturx import *
+from facturx import FacturX
+from facturx.flavors import xml_flavor
 import json
 from datetime import datetime as dt
 
 from PyQt5.QtWidgets import (QMainWindow, QAction, QFileDialog, QLineEdit,
                              QLabel, QDockWidget, QSizePolicy, QGridLayout,
-                             QScrollArea, QWidget, QMessageBox, QPushButton)
+                             QScrollArea, QWidget, QMessageBox, QPushButton,
+                             QDialog, QComboBox)
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt, QEvent
+from PyPDF2 import PdfFileReader
+from PyPDF2.generic import IndirectObject
 
 
 class InvoiceX(QMainWindow):
@@ -285,14 +290,124 @@ class InvoiceX(QMainWindow):
                                                     "pdf (*.pdf)")
 
         if self.fileName[0]:
-            # print(fileName[0])
-            self.factx = FacturX(self.fileName[0])
-            self.set_pdf_preview()
-            self.update_dock_fields()
-            self.setStatusTip("PDF is Ready")
+            if self.check_xml_for_pdf() is None:
+                self.standard = None
+                self.level = None
+                self.choose_standard_level()
+                if self.standard is not None:
+                    self.factx = FacturX(self.fileName[0],
+                                         self.standard,
+                                         self.level)
+            else:
+                self.factx = FacturX(self.fileName[0])
+            if hasattr(self, 'factx'):
+                self.set_pdf_preview()
+                self.update_dock_fields()
+                self.setStatusTip("PDF is Ready")
 
-            # self.file_selected.setText(str(fname[0][0]))
-            # self.file_names = fname[0]
+    def choose_standard_level(self):
+        self.chooseStandardDialog = QDialog()
+        layout = QGridLayout()
+
+        noXMLLabel = QLabel("No XML found", self)
+        layout.addWidget(noXMLLabel, 0, 0)
+
+        chooseStandardLabel = QLabel("Standard", self)
+        chooseStandardCombo = QComboBox(self)
+        chooseStandardCombo.addItem("Factur-X")
+        chooseStandardCombo.addItem("Zugferd")
+        chooseStandardCombo.addItem("UBL")
+        chooseStandardCombo.model().item(2).setEnabled(False)
+        chooseStandardCombo.activated[str].connect(self.on_select_level)
+
+        chooseLevelLabel = QLabel("Level", self)
+        self.chooseLevelCombo = QComboBox(self)
+        self.chooseLevelCombo.addItem("Minimum")
+        self.chooseLevelCombo.addItem("Basic WL")
+        self.chooseLevelCombo.addItem("Basic")
+        self.chooseLevelCombo.addItem("EN16931")
+        self.chooseLevelCombo.activated[str].connect(self.set_level)
+
+        applyStandard = QPushButton("Apply")
+        applyStandard.clicked.connect(self.set_standard_level)
+        discardStandard = QPushButton("Cancel")
+        discardStandard.clicked.connect(self.discard_standard_level)
+
+        layout.addWidget(chooseStandardLabel, 1, 0)
+        layout.addWidget(chooseStandardCombo, 1, 1)
+        layout.addWidget(chooseLevelLabel, 2, 0)
+        layout.addWidget(self.chooseLevelCombo, 2, 1)
+        layout.addWidget(discardStandard, 3, 0)
+        layout.addWidget(applyStandard, 3, 1)
+
+        self.chooseStandardDialog.setLayout(layout)
+        self.chooseStandardDialog.setWindowTitle("Choose Standard")
+        self.chooseStandardDialog.setWindowModality(Qt.ApplicationModal)
+        self.chooseStandardDialog.exec_()
+
+    def set_standard_level(self):
+        try:
+            self.standard = self.standard_temp
+            self.level = self.level_temp
+        except AttributeError:
+            self.standard = 'factur-x'
+            self.level = 'minimum'
+        self.chooseStandardDialog.close()
+
+    def discard_standard_level(self):
+        self.chooseStandardDialog.close()
+
+    def on_select_level(self, text):
+        if text == "Factur-X":
+            self.chooseLevelCombo.clear()
+            self.chooseLevelCombo.addItem("Minimum")
+            self.chooseLevelCombo.addItem("Basic WL")
+            self.chooseLevelCombo.addItem("Basic")
+            self.chooseLevelCombo.addItem("EN16931")
+        elif text == "Zugferd":
+            self.chooseLevelCombo.clear()
+            self.chooseLevelCombo.addItem("Basic")
+            self.chooseLevelCombo.addItem("Comfort")
+        elif text == "UBL":
+            self.chooseLevelCombo.clear()
+            self.chooseLevelCombo.addItem("UBL 2.0")
+            self.chooseLevelCombo.addItem("UBL 2.1")
+
+        standard_dict = {
+            'Factur-X': ['factur-x', 'minimum'],
+            'Zugferd': ['zugferd', 'basic'],
+        }
+        self.standard_temp = standard_dict[text][0]
+        self.level_temp = standard_dict[text][1]
+
+    def set_level(self, text):
+        level_dict = {
+            'Minimum': 'minimum',
+            'Basic WL': 'basicwl',
+            'Basic': 'basic',
+            'EN16931': 'en16931',
+            'Comfort': 'comfort'
+        }
+        self.level_temp = level_dict[text]
+
+    def check_xml_for_pdf(self):
+        pdf = PdfFileReader(self.fileName[0])
+        pdf_root = pdf.trailer['/Root']
+        if '/Names' not in pdf_root or '/EmbeddedFiles' not in pdf_root['/Names']:
+            # logger.info('No existing XML file found.')
+            return None
+
+        for file in pdf_root['/Names']['/EmbeddedFiles']['/Names']:
+            if isinstance(file, IndirectObject):
+                obj = file.getObject()
+                if obj['/F'] in xml_flavor.valid_xmp_filenames():
+                    xml_root = etree.fromstring(obj['/EF']['/F'].getData())
+                    xml_content = xml_root
+                    xml_filename = obj['/F']
+                    # logger.info(
+                    #     'A valid XML file %s has been found in the PDF file',
+                    #     xml_filename)
+        return xml_content
 
     def save_file_dialog(self):
         if self.fileLoaded:
