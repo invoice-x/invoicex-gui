@@ -21,6 +21,8 @@ from PyQt5.QtCore import Qt, QEvent
 from PyPDF2 import PdfFileReader
 from PyPDF2.generic import IndirectObject
 
+from populate import PopulateFieldClass
+
 
 class InvoiceX(QMainWindow):
 
@@ -393,8 +395,8 @@ class InvoiceX(QMainWindow):
     def check_xml_for_pdf(self):
         pdf = PdfFileReader(self.fileName[0])
         pdf_root = pdf.trailer['/Root']
-        if '/Names' not in pdf_root or '/EmbeddedFiles' not in pdf_root['/Names']:
-            # logger.info('No existing XML file found.')
+        if '/Names' not in pdf_root or '/EmbeddedFiles' not in \
+                pdf_root['/Names']:
             return None
 
         for file in pdf_root['/Names']['/EmbeddedFiles']['/Names']:
@@ -403,10 +405,6 @@ class InvoiceX(QMainWindow):
                 if obj['/F'] in xml_flavor.valid_xmp_filenames():
                     xml_root = etree.fromstring(obj['/EF']['/F'].getData())
                     xml_content = xml_root
-                    xml_filename = obj['/F']
-                    # logger.info(
-                    #     'A valid XML file %s has been found in the PDF file',
-                    #     xml_filename)
         return xml_content
 
     def save_file_dialog(self):
@@ -444,7 +442,9 @@ class InvoiceX(QMainWindow):
                                  QMessageBox.Ok)
 
     def extract_fields_from_pdf(self):
-        pass
+        self.populate = PopulateFieldClass(self, self.factx,
+                                           self.fieldsDict,
+                                           self.metadata_field)
 
     def documentation_menubar(self):
         pass
