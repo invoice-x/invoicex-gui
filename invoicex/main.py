@@ -222,7 +222,7 @@ class InvoiceX(QMainWindow):
 
     def edit_fields_dialog(self):
         try:
-            self.dialog = EditFieldsClass(self.factx,
+            self.dialog = EditFieldsClass(self, self.factx,
                                           self.fieldsDict,
                                           self.metadata_field)
             self.dialog.installEventFilter(self)
@@ -482,9 +482,6 @@ class InvoiceX(QMainWindow):
     def eventFilter(self, source, event):
         if event.type() == QEvent.Close and source is self.fields:
             self.viewDock.setChecked(False)
-
-        if event.type() == QEvent.Close and source is self.dialog:
-            self.update_dock_fields()
         return QMainWindow.eventFilter(self, source, event)
 
     def closeEvent(self, event):
@@ -493,11 +490,12 @@ class InvoiceX(QMainWindow):
 
 
 class EditFieldsClass(QWidget, object):
-    def __init__(self, factx, fieldsDict, metadataDict):
+    def __init__(self, invx, factx, fieldsDict, metadataDict):
         super().__init__()
         self.fDict = fieldsDict
         self.mDict = metadataDict
         self.factx = factx
+        self.invx = invx
         self.initUI()
 
     def initUI(self):
@@ -539,6 +537,7 @@ class EditFieldsClass(QWidget, object):
                     self.factx[key] = value.text()
                 else:
                     self.factx[key] = dt.strptime(value.text(), '%Y/%m/%d')
+            self.invx.update_dock_fields()
             self.close()
         except ValueError:
             QMessageBox.critical(self, 'Invalid Field Value',

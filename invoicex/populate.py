@@ -152,7 +152,10 @@ class populate_using_invoice2data(object):
         for key, value in self.fieldValueDict.items():
                 try:
                     if key[:4] != "date":
-                        self.factx[key] = str(value)
+                        if value == None:
+                            self.factx[key] = "NA"
+                        else:
+                            self.factx[key] = str(value)
                     else:
                         pass
                 except IndexError:
