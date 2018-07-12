@@ -70,10 +70,10 @@ class PopulateFieldClass(QWidget):
         self.show()
 
     def customTemplateDialog(self):
-        self.customTemplateFileName = QFileDialog.getExistingDirectory(
+        self.customTemplateFolderName = QFileDialog.getExistingDirectory(
             self, "Select Custom Template Folder")
-        if self.customTemplateFileName:
-            self.customTemplateLineEdit.setText(self.customTemplateFileName)
+        if self.customTemplateFolderName:
+            self.customTemplateLineEdit.setText(self.customTemplateFolderName)
 
     def call_invoice2data(self):
         if self.excludeDefaultFolder.isChecked() and \
@@ -137,10 +137,9 @@ class populate_using_invoice2data(object):
             config.read('.load/default.cfg')
             for key, value in config['CUSTOM'].items():
                 if key in fieldMatchDict:
-                    invoiceFieldDict[0][key] = invoiceFieldDict[0][fieldMatchDict[key]]
-                    del invoiceFieldDict[key]
-                else:
-                    invoiceFieldDict[0][key] = value
+                    invoiceFieldDict[0][fieldMatchDict[key]] = value
+                
+                invoiceFieldDict[0][key] = value
             for key in self.fieldValueDict:
                 if key in invoiceFieldDict[0]:
                     # if key[:4] == 'date':
