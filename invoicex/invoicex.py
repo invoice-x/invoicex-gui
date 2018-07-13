@@ -7,8 +7,8 @@ from distutils import spawn
 import shutil
 from lxml import etree
 
-from facturx import FacturX
-from facturx.flavors import xml_flavor
+from .facturx.facturx import FacturX
+from .facturx.flavors import xml_flavor
 import json
 from datetime import datetime as dt
 
@@ -20,6 +20,8 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt, QEvent
 from PyPDF2 import PdfFileReader
 from PyPDF2.generic import IndirectObject
+
+from .populate import PopulateFieldClass
 
 
 class InvoiceX(QMainWindow):
@@ -220,7 +222,7 @@ class InvoiceX(QMainWindow):
 
     def edit_fields_dialog(self):
         try:
-            self.dialog = EditFieldsClass(self.factx,
+            self.dialog = EditFieldsClass(self, self.factx,
                                           self.fieldsDict,
                                           self.metadata_field)
             self.dialog.installEventFilter(self)
@@ -393,8 +395,8 @@ class InvoiceX(QMainWindow):
     def check_xml_for_pdf(self):
         pdf = PdfFileReader(self.fileName[0])
         pdf_root = pdf.trailer['/Root']
-        if '/Names' not in pdf_root or '/EmbeddedFiles' not in pdf_root['/Names']:
-            # logger.info('No existing XML file found.')
+        if '/Names' not in pdf_root or '/EmbeddedFiles' not in \
+                pdf_root['/Names']:
             return None
 
         for file in pdf_root['/Names']['/EmbeddedFiles']['/Names']:
@@ -403,10 +405,6 @@ class InvoiceX(QMainWindow):
                 if obj['/F'] in xml_flavor.valid_xmp_filenames():
                     xml_root = etree.fromstring(obj['/EF']['/F'].getData())
                     xml_content = xml_root
-                    xml_filename = obj['/F']
-                    # logger.info(
-                    #     'A valid XML file %s has been found in the PDF file',
-                    #     xml_filename)
         return xml_content
 
     def save_file_dialog(self):
@@ -444,7 +442,9 @@ class InvoiceX(QMainWindow):
                                  QMessageBox.Ok)
 
     def extract_fields_from_pdf(self):
-        pass
+        self.populate = PopulateFieldClass(self, self.factx,
+                                           self.fieldsDict,
+                                           self.metadata_field)
 
     def documentation_menubar(self):
         pass
@@ -482,9 +482,6 @@ class InvoiceX(QMainWindow):
     def eventFilter(self, source, event):
         if event.type() == QEvent.Close and source is self.fields:
             self.viewDock.setChecked(False)
-
-        if event.type() == QEvent.Close and source is self.dialog:
-            self.update_dock_fields()
         return QMainWindow.eventFilter(self, source, event)
 
     def closeEvent(self, event):
@@ -493,11 +490,12 @@ class InvoiceX(QMainWindow):
 
 
 class EditFieldsClass(QWidget, object):
-    def __init__(self, factx, fieldsDict, metadataDict):
+    def __init__(self, invx, factx, fieldsDict, metadataDict):
         super().__init__()
         self.fDict = fieldsDict
         self.mDict = metadataDict
         self.factx = factx
+        self.invx = invx
         self.initUI()
 
     def initUI(self):
@@ -539,6 +537,7 @@ class EditFieldsClass(QWidget, object):
                     self.factx[key] = value.text()
                 else:
                     self.factx[key] = dt.strptime(value.text(), '%Y/%m/%d')
+            self.invx.update_dock_fields()
             self.close()
         except ValueError:
             QMessageBox.critical(self, 'Invalid Field Value',
