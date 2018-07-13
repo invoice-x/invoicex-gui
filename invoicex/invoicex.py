@@ -7,8 +7,8 @@ from distutils import spawn
 import shutil
 from lxml import etree
 
-from facturx import FacturX
-from facturx.flavors import xml_flavor
+from .facturx.facturx import FacturX
+from .facturx.flavors import xml_flavor
 import json
 from datetime import datetime as dt
 
@@ -21,7 +21,7 @@ from PyQt5.QtCore import Qt, QEvent
 from PyPDF2 import PdfFileReader
 from PyPDF2.generic import IndirectObject
 
-from populate import PopulateFieldClass
+from .populate import PopulateFieldClass
 
 
 class InvoiceX(QMainWindow):

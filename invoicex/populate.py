@@ -89,7 +89,8 @@ class PopulateFieldClass(QWidget):
                     config['CUSTOM'][key] = value.text()
             with open('.load/default.cfg', 'w') as configfile:
                 config.write(configfile)
-            populate_using_invoice2data(self.excludeDefaultFolder.isChecked(),
+            populate_using_invoice2data(self,
+                                        self.excludeDefaultFolder.isChecked(),
                                         self.customTemplateFolderName,
                                         self.fDict,
                                         self.gui,
@@ -101,12 +102,13 @@ class PopulateFieldClass(QWidget):
 
 
 class populate_using_invoice2data(object):
-    def __init__(self, excludeDefaultFolder, templateFolder,
+    def __init__(self, popfield, excludeDefaultFolder, templateFolder,
                  fieldDict, gui, factx):
         self.parser = create_parser()
         self.fieldValueDict = fieldDict
         self.gui = gui
         self.factx = factx
+        self.popfield = popfield
         self.outputFile = '.load/invoice2data_output.json'
         self.parseList = ['--output-format',
                           'json',
@@ -127,37 +129,45 @@ class populate_using_invoice2data(object):
         self.set_values()
 
     def set_values(self):
+        templateerror = False
         fieldMatchDict = {
             'seller': 'issuer',
             'amount_total': 'amount'
         }
-        with open(self.outputFile, 'r') as json_file:
-            invoiceFieldDict = json.load(json_file)
-            config = configparser.RawConfigParser()
-            config.read('.load/default.cfg')
-            for key, value in config['CUSTOM'].items():
-                if key in fieldMatchDict:
-                    invoiceFieldDict[0][fieldMatchDict[key]] = value
-                
-                invoiceFieldDict[0][key] = value
-            for key in self.fieldValueDict:
-                if key in invoiceFieldDict[0]:
-                    # if key[:4] == 'date':
-                    #     self.fieldValueDict[key] = dt.strftime(invoiceFieldDict[0][key])
-                    self.fieldValueDict[key] = invoiceFieldDict[0][key]
-                if key in fieldMatchDict:
-                        self.fieldValueDict[key] = invoiceFieldDict[0][fieldMatchDict[key]]
+        try:
+            with open(self.outputFile, 'r') as json_file:
+                invoiceFieldDict = json.load(json_file)
+                config = configparser.RawConfigParser()
+                config.read('.load/default.cfg')
+                for key, value in config['CUSTOM'].items():
+                    if key in fieldMatchDict:
+                        invoiceFieldDict[0][fieldMatchDict[key]] = value
+                    
+                    invoiceFieldDict[0][key] = value
+                for key in self.fieldValueDict:
+                    if key in invoiceFieldDict[0]:
+                        # if key[:4] == 'date':
+                        #     self.fieldValueDict[key] = dt.strftime(invoiceFieldDict[0][key])
+                        self.fieldValueDict[key] = invoiceFieldDict[0][key]
+                    if key in fieldMatchDict:
+                            self.fieldValueDict[key] = invoiceFieldDict[0][fieldMatchDict[key]]
+        except IndexError:
+            templateerror = True
+            QMessageBox.critical(self.popfield, 'Template Error',
+                                 "No matching template found",
+                                 QMessageBox.Ok)
 
-        for key, value in self.fieldValueDict.items():
-                try:
-                    if key[:4] != "date":
-                        if value == None:
-                            self.factx[key] = "NA"
+        if not templateerror:
+            for key, value in self.fieldValueDict.items():
+                    try:
+                        if key[:4] != "date":
+                            if value == None:
+                                self.factx[key] = "NA"
+                            else:
+                                self.factx[key] = str(value)
                         else:
-                            self.factx[key] = str(value)
-                    else:
+                            pass
+                    except IndexError:
                         pass
-                except IndexError:
-                    pass
 
-        self.gui.update_dock_fields()
+            self.gui.update_dock_fields()

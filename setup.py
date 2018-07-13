@@ -33,7 +33,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'invoicex-gui = invoicex.main:main',
+            'invoicex-gui = invoicex.invoicex:main',
         ]
     }
 )
