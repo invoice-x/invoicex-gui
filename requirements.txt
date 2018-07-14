@@ -2,3 +2,4 @@ PyQt5==5.10.1
 PyPDF2
 lxml
 PyYAML
+invoice2data
