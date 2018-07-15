@@ -452,9 +452,14 @@ class InvoiceX(QMainWindow):
                                  QMessageBox.Ok)
 
     def extract_fields_from_pdf(self):
-        self.populate = PopulateFieldClass(self, self.factx,
-                                           self.fieldsDict,
-                                           self.metadata_field)
+        if self.fileLoaded:
+            self.populate = PopulateFieldClass(self, self.factx,
+                                               self.fieldsDict,
+                                               self.metadata_field)
+        else:
+            QMessageBox.critical(self, 'File Not Found',
+                                 "Load a PDF first",
+                                 QMessageBox.Ok)
 
     def documentation_menubar(self):
         pass
