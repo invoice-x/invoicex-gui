@@ -23,3 +23,10 @@ You can also make your own spec file
           --name="Invoice-X GUI" \
           --icon=../invoicex/icons/logo.ico \
           ../main.py
+
+Note
+----
+
+Make sure you have made changes to .spec file:
+- add _strptime.py to root from `usr/lib/python3/`
+- change python version in `venv/lib/python3.6/../en.py`
