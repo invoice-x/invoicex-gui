@@ -1,4 +1,4 @@
-Building Execulatable
+Building Executable
 =====================
 
 For building executable file we recommend using `pyinstaller <https://www.pyinstaller.org/>`_
