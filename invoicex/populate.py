@@ -1,10 +1,8 @@
 from PyQt5.QtWidgets import (QWidget, QPushButton, QGridLayout, QFileDialog,
                              QLabel, QLineEdit, QMessageBox, QCheckBox)
 from PyQt5.QtGui import QIcon, QFont
-from datetime import datetime as dt
 import configparser
 from invoice2data.main import *
-from invoice2data.extract.loader import read_templates
 import json
 
 
@@ -142,15 +140,14 @@ class populate_using_invoice2data(object):
                 for key, value in config['CUSTOM'].items():
                     if key in fieldMatchDict:
                         invoiceFieldDict[0][fieldMatchDict[key]] = value
-                    
+
                     invoiceFieldDict[0][key] = value
                 for key in self.fieldValueDict:
                     if key in invoiceFieldDict[0]:
-                        # if key[:4] == 'date':
-                        #     self.fieldValueDict[key] = dt.strftime(invoiceFieldDict[0][key])
                         self.fieldValueDict[key] = invoiceFieldDict[0][key]
                     if key in fieldMatchDict:
-                            self.fieldValueDict[key] = invoiceFieldDict[0][fieldMatchDict[key]]
+                            self.fieldValueDict[key] = \
+                                invoiceFieldDict[0][fieldMatchDict[key]]
         except IndexError:
             templateerror = True
             QMessageBox.critical(self.popfield, 'Template Error',
@@ -161,7 +158,7 @@ class populate_using_invoice2data(object):
             for key, value in self.fieldValueDict.items():
                     try:
                         if key[:4] != "date":
-                            if value == None:
+                            if value is None:
                                 self.factx[key] = "NA"
                             else:
                                 self.factx[key] = str(value)

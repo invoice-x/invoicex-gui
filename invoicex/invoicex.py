@@ -410,7 +410,12 @@ class InvoiceX(QMainWindow):
     def save_file_dialog(self):
         if self.fileLoaded:
             if self.confirm_save_dialog():
-                self.factx.write_pdf(self.fileName[0])
+                try:
+                    self.factx.write_pdf(self.fileName[0])
+                except TypeError:
+                    QMessageBox.critical(self, 'Type Error',
+                                         "Some field value(s) are invalid",
+                                         QMessageBox.Ok)
         else:
             QMessageBox.critical(self, 'File Not Found',
                                  "Load a PDF first",
@@ -428,14 +433,19 @@ class InvoiceX(QMainWindow):
 
     def show_save_as_dialog(self):
         if self.fileLoaded:
-            self.saveFileName = QFileDialog.getSaveFileName(
-                self, 'Save file', os.path.expanduser("~"), "pdf (*.pdf)")
-            if self.saveFileName[0]:
-                if self.saveFileName[0].endswith('.pdf'):
-                    fileName = self.saveFileName[0]
-                else:
-                    fileName = self.saveFileName[0] + '.pdf'
-                self.factx.write_pdf(fileName)
+            try:
+                self.saveFileName = QFileDialog.getSaveFileName(
+                    self, 'Save file', os.path.expanduser("~"), "pdf (*.pdf)")
+                if self.saveFileName[0]:
+                    if self.saveFileName[0].endswith('.pdf'):
+                        fileName = self.saveFileName[0]
+                    else:
+                        fileName = self.saveFileName[0] + '.pdf'
+                    self.factx.write_pdf(fileName)
+            except TypeError:
+                QMessageBox.critical(self, 'Type Error',
+                                     "Some field value(s) are not valid",
+                                     QMessageBox.Ok)
         else:
             QMessageBox.critical(self, 'File Not Found',
                                  "Load a PDF first",
