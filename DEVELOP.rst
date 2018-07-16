@@ -4,11 +4,27 @@ Development
 If you are looking to get involved improving ``invoicex-gui``, this
 guide will help you get started quickly.
 
-Install
--------
+Development Guide
+-----------------
 
-1. Fork main repository (optional)
-2. Clone repository: ``git clone https://github.com/invoice-x/invoicex-gui``
+1. Fork the `main repository <https://github.com/invoice-x/invoicex-gui>`_. Click on the 'Fork' button near the top of the page. This creates a copy of the code under your account on the GitHub server. (optional)
+
+2. Clone this copy to your local disk: 
+
+::
+
+	$ git clone https://github.com/invoice-x/invoicex-gui
+	$ cd invoicex-gui
+
+3. Create a branch to hold your changes and start making changes. Don't work on ``master`` branch
+
+::
+
+	$ git checkout -b my_enhancement
+
+4. Send Pull Request to ``dev`` branch of this repository
+
+5. If the Pull Request is merged and is found out to be stable it will be merged to `master branch <https://github.com/invoice-x/invoicex-gui>`_
 
 Build
 -----
