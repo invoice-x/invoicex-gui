@@ -11,9 +11,9 @@ Command
     $ pip install pyinstaller
     $ pyinstaller invoicex_linux.spec
 
-`invoicex_linux <invoicex_linux.spec>`_ is the spec to be used
+`invoicex_linux <https://github.com/invoice-x/invoicex-gui/blob/master/bin/invoicex_linux.spec>`_ is the spec to be used
 
-`invoicex_windows <invoicex_windows.spec>`_ is the spec to be used
+`invoicex_windows <https://github.com/invoice-x/invoicex-gui/blob/master/bin/invociex_windows.spec>`_ is the spec to be used
 
 You can also make your own spec file
 
