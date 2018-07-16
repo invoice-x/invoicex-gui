@@ -60,6 +60,15 @@ class InvoiceX(QMainWindow):
             QMessageBox.critical(self, 'Import Error',
                                  "Imagemagick is not installed",
                                  QMessageBox.Ok)
+            self.close()
+
+        if sys.platform[:3] == 'win':
+            if not spawn.find_executable('magick'):
+                QMessageBox.critical(
+                    self, 'Import Error',
+                    "Imagemagick and GhostScript are not installed",
+                    QMessageBox.Ok)
+            self.close()
 
     def set_toolbar(self):
         toolbar = self.addToolBar('File')
