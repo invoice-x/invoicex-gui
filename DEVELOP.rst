@@ -7,7 +7,7 @@ guide will help you get started quickly.
 Development Guide
 -----------------
 
-1. Fork the `main repository <https://github.com/invoice-x/invoicex-gui>`_. Click on the 'Fork' button near the top of the page. This creates a copy of the code under your account on the GitHub server. (optional)
+1. Fork the `main repository <https://github.com/invoice-x/invoicex-gui>`_. Click on the 'Fork' button near the top of the page. This creates a copy of the code under your account on the GitHub server.
 
 2. Clone this copy to your local disk: 
 
@@ -28,7 +28,7 @@ Development Guide
 
 Build
 -----
-To build executable read `this <https://github.com/invoice-x/invoicex-gui/blob/master/bin/>`_
+To build executable read `Build Guide <https://github.com/invoice-x/invoicex-gui/blob/master/bin/>`_
 
 Organization
 ------------
