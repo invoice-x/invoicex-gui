@@ -12,6 +12,7 @@ Command
     $ pyinstaller invoicex_linux.spec
 
 `invoicex_linux <invoicex_linux.spec>`_ is the spec to be used
+
 `invoicex_windows <invoicex_windows.spec>`_ is the spec to be used
 
 You can also make your own spec file
