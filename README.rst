@@ -37,6 +37,12 @@ OR run from terminal
     $ python setup.py install
     $ invoicex-gui
 
+Development
+-----------
+
+If you are interested in improving this project, have a look at our
+`developer guide <DEVELOP.rst>`__ to get you started quickly.
+
 Status
 ------
 
