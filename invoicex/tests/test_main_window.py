@@ -15,7 +15,8 @@ class TestMainWindow(unittest.TestCase):
         cls.widget.load_pdf_file()
 
     def test_pdf_preview(self):
-        self.assertTrue(os.path.isfile('.load/preview.jpg'))
+        self.assertTrue(os.path.isfile('.load/preview.jpg'),
+                        "Image file of pdf was not generated")
 
     def test_save_as(self):
         if not os.path.isdir('temp_test_file'):
