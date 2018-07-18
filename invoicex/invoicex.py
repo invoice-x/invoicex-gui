@@ -299,7 +299,9 @@ class InvoiceX(QMainWindow):
         self.fileName = QFileDialog.getOpenFileName(self, 'Open file',
                                                     os.path.expanduser("~"),
                                                     "pdf (*.pdf)")
+        self.load_pdf_file()
 
+    def load_pdf_file(self):
         if self.fileName[0]:
             if self.check_xml_for_pdf() is None:
                 self.standard = None
@@ -485,15 +487,24 @@ class InvoiceX(QMainWindow):
                 "%s (*.%s)" % (outputformat, outputformat))
             if self.exportFileName[0]:
                 if outputformat is "json":
-                    self.factx.write_json(self.exportFileName[0])
+                    self.pdf_write_json(self.exportFileName[0])
                 elif outputformat is "xml":
-                    self.factx.write_xml(self.exportFileName[0])
+                    self.pdf_write_xml(self.exportFileName[0])
                 elif outputformat is "yml":
-                    self.factx.write_yml(self.exportFileName[0])
+                    self.pdf_write_yml(self.exportFileName[0])
         else:
             QMessageBox.critical(self, 'File Not Found',
                                  "Load a PDF first",
                                  QMessageBox.Ok)
+
+    def pdf_write_json(self, fileName):
+        self.factx.write_json(fileName)
+
+    def pdf_write_xml(self, fileName):
+        self.factx.write_xml(fileName)
+
+    def pdf_write_yml(self, fileName):
+        self.factx.write_yml(fileName)
 
     def resizeEvent(self, event):
         if self.fileLoaded:
