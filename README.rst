@@ -1,5 +1,8 @@
 GUI for factur-x - Invoice-X GUI
 ================================
+
+|Travis CI|
+
 Graphical User Interface for `factur-x <https://github.com/invoice-x/factur-x>`_ library with basic functionalities such as:
 
 - Validate Metadata
@@ -63,3 +66,6 @@ Working Features:
 Author
 ------
 - `Harshit Joshi <https://github.com/duskybomb>`_
+
+.. |Travis CI| image:: https://travis-ci.org/invoice-x/invoicex-gui.svg?branch=master
+   :target: https://travis-ci.org/invoice-x/invoicex-gui
