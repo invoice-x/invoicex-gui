@@ -1,7 +1,7 @@
 from ..invoicex import InvoiceX
 import unittest
 import os
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import QCoreApplication
 import sys
 import shutil
 
@@ -9,7 +9,7 @@ import shutil
 class TestMainWindow(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        app = QApplication(sys.argv)
+        app = QCoreApplication(sys.argv)
         cls.widget = InvoiceX()
         cls.widget.fileName = ['../invoice.pdf']
         cls.widget.load_pdf_file()
