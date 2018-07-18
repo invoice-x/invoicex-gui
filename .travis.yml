@@ -2,8 +2,12 @@ language: python
 python:
   - "3.5"
   - "3.6"
-before_install:
-  sudo apt install -y xvfb imagemagick ghostscript
+addons:
+  apt:
+    packages:
+      - xvfb
+      - imagemagick
+      - ghostscript
 install:
   pip install -r requirements.txt
 script:
