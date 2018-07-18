@@ -11,7 +11,9 @@ class TestMainWindow(unittest.TestCase):
     def setUpClass(cls):
         app = QApplication(sys.argv)
         cls.widget = InvoiceX()
-        cls.widget.fileName = ['../invoice.pdf']
+        test_file = os.path.join(os.path.dirname(__file__),
+                                 'sample_invoice/Facture_FR_BASIC.pdf')
+        cls.widget.fileName = [test_file]
         cls.widget.load_pdf_file()
 
     # @classmethod
