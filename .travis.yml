@@ -2,7 +2,13 @@ language: python
 python:
   - "3.5"
   - "3.6"
+addons:
+  apt:
+    packages:
+      - xvfb
+      - imagemagick
+      - ghostscript
 install:
   pip install -r requirements.txt
 script:
-  pytest
+  xvfb-run pytest
