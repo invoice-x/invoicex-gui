@@ -14,6 +14,10 @@ class TestMainWindow(unittest.TestCase):
         cls.widget.fileName = ['../invoice.pdf']
         cls.widget.load_pdf_file()
 
+    # @classmethod
+    # def tearDown(cls):
+    #     sys.exit()
+
     def test_pdf_preview(self):
         self.assertTrue(os.path.isfile('.load/preview.jpg'),
                         "Image file of pdf was not generated")
