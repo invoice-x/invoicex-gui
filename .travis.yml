@@ -3,7 +3,7 @@ python:
   - "3.5"
   - "3.6"
 before_install:
-  sudo apt install -y xvfb
+  sudo apt install -y xvfb imagemagick ghostscript
 install:
   pip install -r requirements.txt
 script:
