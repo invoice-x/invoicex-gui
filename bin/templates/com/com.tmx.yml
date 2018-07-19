@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+issuer: TSX Inc.
+fields:
+  amount: Total\s+Amount\s+Due\s+USD\s+\$([\d,]+\.\d{2})
+  amount_untaxed: Pre-Tax\s+Total\s+([\d,]+\.\d{2})
+  date: Invoice\s+Date\s+(\d{2}\s\w+\s\d{4})
+  invoice_number: Invoice\s+Number\s+(\w+)
+  static_partner_name: TSX Inc.
+keywords:
+  - Invoice
+  - USD
+  - payments@tmx.com
+options:
+  currency: USD
+  date_formats:
+    - '%d-%b-%Y'
+  decimal_separator: '.'

@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+issuer: FINAGAZ
+fields:
+  amount: Montant TTC en notre faveur\s+([\d ]+,\d{2})
+  amount_untaxed: Montant\sHors\sTaxe\s+([\d ]+,\d{2})
+  date: N°\s+\d+\s+du\s+(\d{2}/\d{2}/\d{4})
+  invoice_number: N°\s+(\d+)\s+du\s+\d{2}/\d{2}/\d{4}
+  date_due: Date\sd'échéance\s+:\s+(\d{2}/\d{2}/\d{4})
+  static_vat: FR68582018966
+keywords:
+  - FR68582018966
+  - FACTURE
+  - €
+options:
+  currency: EUR
+  date_formats:
+    - '%d/%m/%Y'
+  decimal_separator: ','

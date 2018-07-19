@@ -1,0 +1,21 @@
+# -*- coding: utf-8 -*-
+issuer: EDF
+fields:
+  amount: Total TTC en euros \(détails au verso\) :\s+([\d ]+,\d{2})
+  amount_untaxed: Montant Hors T.V.A. :\s+([\d ]+,\d{2})
+  date: Facture \d+ du (\d{2}/\d{2}/\d{4})
+  invoice_number: Facture (\d+)
+  static_vat: FR 03 552 081 317
+keywords:
+  - EDF Entreprises
+  - Relation Client Grandes Entreprises
+  - FR 03 552 081 317
+  - Facture
+  - €
+options:
+  currency: EUR
+  date_formats:
+    - '%d/%m/%Y'
+  languages:
+    - fr
+  decimal_separator: ','

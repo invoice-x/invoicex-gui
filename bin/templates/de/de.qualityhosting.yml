@@ -1,0 +1,20 @@
+issuer: QualityHosting AG
+fields:
+  amount: Total EUR\s+(\d+,\d+)
+  amount_untaxed: Total EUR\s+(\d+,\d+)
+  date: \s{2,}(\d+\. .+ \d{4})\s{2,}
+  invoice_number: Rechnungsnr\.\s+(\d{8})
+  vat: DE 232 446 240
+lines:
+  start: 'Contract No. \w+'
+  end: 'Total EUR'
+  first_line: '\s+(?P<pos>\d+)\s+(?P<qty>\d+)\s+(?P<desc>.{,70})\s+(?P<price>\d+,\d+)'
+  line: '^\s+(?P<desc>.+)$'
+  types:
+      qty: float
+      price: float
+keywords:
+- QualityHosting
+options:
+  currency: EUR
+  decimal_separator: ","

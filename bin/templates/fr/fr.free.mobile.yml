@@ -1,0 +1,20 @@
+# -*- coding: utf-8 -*-
+issuer: Free Mobile
+fields:
+  amount: \spayer TTC\*\s+(\d+.\d{2})
+  amount_untaxed: Total de la facture HT\s+(\d+.\d{2})
+  date: Facture no \d+ du (\d+ .+ \d{4})
+  invoice_number: Facture no (\d+)
+  static_vat: FR25499247138
+keywords:
+  - FR25499247138
+  - Facture
+options:
+  currency: EUR
+  date_formats:
+    - '%d %B %Y'
+  languages:
+    - fr
+  decimal_separator: '.'
+  replace:
+    - ['e´ ', 'é']
