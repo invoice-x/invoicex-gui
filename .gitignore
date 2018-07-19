@@ -109,3 +109,6 @@ venv.bak/
 
 # pycharm
 .idea/
+
+# extra file by invoicex-gui 
+.load/
