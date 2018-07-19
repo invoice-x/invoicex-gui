@@ -6,8 +6,8 @@ block_cipher = None
 a = Analysis(['../main.py'],
              pathex=['/home/duskybomb/projects/invoicex-gui'],
              binaries=[],
-             datas=[('../venv/lib/python3.6/site-packages/dateparser/data/date_translation_data/en.py', 'dateparser/data/date_translation_data/'),
-             ('../_strptime.py', '.'),('../invoicex/icons/*.png','invoicex/icons/'),
+             datas=[('en.py', 'dateparser/data/date_translation_data/')
+             ('_strptime.py', '.'),('../invoicex/icons/*.png','invoicex/icons/'),
              ('../invoicex/facturx/flavors/*.yml', 'invoicex/facturx/flavors/'),
              ('../invoicex/facturx/flavors/factur-x/xml/*.xml', 'invoicex/facturx/flavors/factur-x/xml/'),
              ('../invoicex/facturx/flavors/factur-x/xsd/*.xsd', 'invoicex/facturx/flavors/factur-x/xsd/'),

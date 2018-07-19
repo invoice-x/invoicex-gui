@@ -29,9 +29,4 @@ You can also make your own spec file
 Note
 ----
 
-Make sure you have made changes to .spec file
-
-Like:
-
-- add _strptime.py to root from `usr/lib/python3/`
-- change python version in `venv/lib/python3.6/../en.py`
+Files, ``_strptime.py`` and ``en.py`` are there for pyinstaller to discover

@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import (QWidget, QPushButton, QGridLayout, QFileDialog,
                              QLabel, QLineEdit, QMessageBox, QCheckBox)
 from PyQt5.QtGui import QIcon, QFont
 import configparser
-from invoice2data.main import *
+from invoice2data.main import main, create_parser
 import json
 
 
