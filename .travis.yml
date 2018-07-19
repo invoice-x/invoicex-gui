@@ -17,7 +17,7 @@ deploy:
   provider: releases
   api_key:
     secure: TDLvRsDeVG7B1Bpx5qoyTeFXtjGtJFBwP9kVKpQts1LBLdl3BFByQd7wjEvFxnZ9pIBTTAL9Y0mwSPp19zP41varsGi9IQPTIebfh9IxgJIZAT9A/NoytChoYoEF3vh8IlhXw88sl/vcYNZ3FufOqaYtoeETLE0Ck8RU2OySrV1dK48KFsoj47L3R6v6rkyIweqdmz0ZLYy9ODnJKxbRa7yylcgSPKf0XbHPYIM5ZrFzcRob4RGxpy5Y/3oVr97kAowUvfXG+dofb1262CjwZbq+VUTLbD+HJ5Q993ylY4598ijOFkqXuDfreccNC5ZxlGozuq5GtOU9V0EQkNiEdnPUJW3amHao/ItADreV9xySjbf+qI+JPCZaYuvksn7MZPIiFX5HoSpjbRD0fjtJv/8wHQeq5qHGctGXQE/rRN5NyRWCsTnut99KZKyUWyQRfPaVErSMYd3QDUBhB9x6wAcxNCkWVw6Kdtvlewh0nE5X6dtY4ugKJClfFAyL4boVcBzVysOfrGDlgqZLact821mU6lBs1iFosBJnbwEb0EHKcSxAczEI0+PmYRnCcwimv12HsRw9Zf9hy7q9m+DePo1pHVINdM8XuyH70hEydjWylnilK+5fYo+JUQxI9vU7Imm+BiZ0oBvV8pejyw2ao+irA0brF5RZ4KZnMo43RoM=
-  file: 'dist/InvoiceX GUI'
+  file: "dist/InvoiceX GUI"
   on:
     repo: invoice-x/invoicex-gui
     tags: true
