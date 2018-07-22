@@ -543,6 +543,8 @@ class EditFieldsClass(QWidget, object):
             fKey = QLabel(self.mDict[key])
             fValue = QLineEdit()
             fValue.setText(self.fDict[key])
+            if key[:4] == 'date':
+                fValue.setPlaceholderText("YYYY/MM/DD")
             if self.fDict[key] == "Field Not Specified":
                 fValue.setEnabled(False)
             else:
