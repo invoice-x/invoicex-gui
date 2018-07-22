@@ -39,8 +39,12 @@ class InvoiceX(QMainWindow):
         self.initUI()
 
     def initUI(self):
+        """Give structure to window
 
-        # StatusBar
+
+        Defines basic structure of main window and checks convert command or
+        magick based on the platform
+        """
 
         self.statusBar()
         self.setStatusTip('Select a PDF to get started')
@@ -71,6 +75,7 @@ class InvoiceX(QMainWindow):
                 self.close()
 
     def set_toolbar(self):
+        """Add toolbar options"""
         toolbar = self.addToolBar('File')
         toolbar.addAction(self.openFile)
         toolbar.addAction(self.saveFile)
@@ -78,11 +83,13 @@ class InvoiceX(QMainWindow):
         toolbar.addAction(self.editFields)
 
     def set_center_widget(self):
+        """Add central widget options"""
         self.square = QLabel(self)
         self.square.setAlignment(Qt.AlignCenter)
         self.setCentralWidget(self.square)
 
     def set_dockview_fields(self):
+        """Add Right dock options"""
         self.fields = QDockWidget("Fields", self)
         self.fields.installEventFilter(self)
         self.fieldsQWidget = QWidget()
@@ -100,6 +107,7 @@ class InvoiceX(QMainWindow):
         self.addDockWidget(Qt.RightDockWidgetArea, self.fields)
 
     def set_menu_bar(self):
+        """Add Menu bar options"""
         self.exitAct = QAction(QIcon(os.path.join(
             os.path.dirname(__file__), 'icons/exit.png')), 'Exit', self)
         self.exitAct.setShortcut('Ctrl+Q')
@@ -125,7 +133,7 @@ class InvoiceX(QMainWindow):
         self.viewDock = QAction('View Fields', self, checkable=True)
         self.viewDock.setStatusTip('View Fields')
         self.viewDock.setChecked(True)
-        self.viewDock.triggered.connect(self.view_dock_field_toggle)
+        self.viewDock.triggered.connect(self._view_dock_field_toggle)
 
         extractFields = QAction('Extract Fields', self)
         extractFields.setStatusTip('Extract Fields from PDF and add to XML')
@@ -190,13 +198,15 @@ class InvoiceX(QMainWindow):
         helpMenu.addAction(documentation)
         helpMenu.addAction(aboutApp)
 
-    def view_dock_field_toggle(self, state):
+    def _view_dock_field_toggle(self, state):
+        """Toggle to view Dock"""
         if state:
             self.fields.show()
         else:
             self.fields.hide()
 
     def validate_xml(self):
+        """Validate XML using is_valid()"""
         try:
             if self.factx.is_valid():
                 QMessageBox.information(self, 'Valid XML',
@@ -212,7 +222,10 @@ class InvoiceX(QMainWindow):
                                  QMessageBox.Ok)
 
     def set_pdf_preview(self):
-        # print(str(fileName[0]))
+        """View preview of PDF opened
+
+        Uses imagemagick and ghostscript to create image from pdf
+        """
         if not os.path.exists('.load'):
             os.mkdir('.load')
         if sys.platform[:3] == 'win':
@@ -230,6 +243,7 @@ class InvoiceX(QMainWindow):
             Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
     def edit_fields_dialog(self):
+        """function to edit fields"""
         try:
             self.dialog = EditFieldsClass(self, self.factx,
                                           self.fieldsDict,
@@ -242,6 +256,7 @@ class InvoiceX(QMainWindow):
                                  QMessageBox.Ok)
 
     def update_dock_fields(self):
+        """Load Fields from the attached XML"""
         self.factx.write_json('.load/output.json')
         with open('.load/output.json') as jsonFile:
             self.fieldsDict = json.load(jsonFile)
@@ -288,25 +303,26 @@ class InvoiceX(QMainWindow):
                     fieldValue.setStyleSheet("QLabel { color: #666666}")
                 else:
                     fieldValue = QLabel(self.fieldsDict[key])
-            # fieldValue.setFrameShape(QFrame.Panel)
-            # fieldValue.setFrameShadow(QFrame.Plain)
-            # fieldValue.setLineWidth(3)
             self.layout.addWidget(fieldKey, i, 0)
             self.layout.addWidget(fieldValue, i, 1)
 
     def show_file_dialog(self):
-
+        """OPen File Dialog to select PDF to be opened"""
         self.fileName = QFileDialog.getOpenFileName(self, 'Open file',
                                                     os.path.expanduser("~"),
                                                     "pdf (*.pdf)")
         self.load_pdf_file()
 
     def load_pdf_file(self):
+        """Load PDF and find standard
+
+        If no attached XML is found, then show dialog to select Standard
+        """
         if self.fileName[0]:
             if self.check_xml_for_pdf() is None:
                 self.standard = None
                 self.level = None
-                self.choose_standard_level()
+                self._choose_standard_level()
                 if self.standard is not None:
                     self.factx = FacturX(self.fileName[0],
                                          self.standard,
@@ -318,7 +334,7 @@ class InvoiceX(QMainWindow):
                 self.update_dock_fields()
                 self.setStatusTip("PDF is Ready")
 
-    def choose_standard_level(self):
+    def _choose_standard_level(self):
         self.chooseStandardDialog = QDialog()
         layout = QGridLayout()
 
@@ -331,7 +347,7 @@ class InvoiceX(QMainWindow):
         chooseStandardCombo.addItem("Zugferd")
         chooseStandardCombo.addItem("UBL")
         chooseStandardCombo.model().item(2).setEnabled(False)
-        chooseStandardCombo.activated[str].connect(self.on_select_level)
+        chooseStandardCombo.activated[str].connect(self._on_select_level)
 
         chooseLevelLabel = QLabel("Level", self)
         self.chooseLevelCombo = QComboBox(self)
@@ -339,12 +355,12 @@ class InvoiceX(QMainWindow):
         self.chooseLevelCombo.addItem("Basic WL")
         self.chooseLevelCombo.addItem("Basic")
         self.chooseLevelCombo.addItem("EN16931")
-        self.chooseLevelCombo.activated[str].connect(self.set_level)
+        self.chooseLevelCombo.activated[str].connect(self._set_level)
 
         applyStandard = QPushButton("Apply")
-        applyStandard.clicked.connect(self.set_standard_level)
+        applyStandard.clicked.connect(self._set_standard_level)
         discardStandard = QPushButton("Cancel")
-        discardStandard.clicked.connect(self.discard_standard_level)
+        discardStandard.clicked.connect(self._discard_standard_level)
 
         layout.addWidget(chooseStandardLabel, 1, 0)
         layout.addWidget(chooseStandardCombo, 1, 1)
@@ -358,7 +374,7 @@ class InvoiceX(QMainWindow):
         self.chooseStandardDialog.setWindowModality(Qt.ApplicationModal)
         self.chooseStandardDialog.exec_()
 
-    def set_standard_level(self):
+    def _set_standard_level(self):
         if hasattr(self, 'standard_temp'):
             self.standard = self.standard_temp
         else:
@@ -370,10 +386,10 @@ class InvoiceX(QMainWindow):
             self.level = 'minimum'
         self.chooseStandardDialog.close()
 
-    def discard_standard_level(self):
+    def _discard_standard_level(self):
         self.chooseStandardDialog.close()
 
-    def on_select_level(self, text):
+    def _on_select_level(self, text):
         if text == "Factur-X":
             self.chooseLevelCombo.clear()
             self.chooseLevelCombo.addItem("Minimum")
@@ -396,7 +412,7 @@ class InvoiceX(QMainWindow):
         self.standard_temp = standard_dict[text][0]
         self.level_temp = standard_dict[text][1]
 
-    def set_level(self, text):
+    def _set_level(self, text):
         level_dict = {
             'Minimum': 'minimum',
             'Basic WL': 'basicwl',
@@ -407,6 +423,7 @@ class InvoiceX(QMainWindow):
         self.level_temp = level_dict[text]
 
     def check_xml_for_pdf(self):
+        """Look for XML in PDF"""
         pdf = PdfFileReader(self.fileName[0])
         pdf_root = pdf.trailer['/Root']
         if '/Names' not in pdf_root or '/EmbeddedFiles' not in \
@@ -422,6 +439,7 @@ class InvoiceX(QMainWindow):
         return xml_content
 
     def save_file_dialog(self):
+        """Open dialog to select location"""
         if self.fileLoaded:
             if self.confirm_save_dialog():
                 try:
@@ -436,6 +454,7 @@ class InvoiceX(QMainWindow):
                                  QMessageBox.Ok)
 
     def confirm_save_dialog(self):
+        """Prompt to verify saving of PDF with XML"""
         reply = QMessageBox.question(
             self, 'Message', "Do you want to save? This cannot be undone",
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -446,6 +465,7 @@ class InvoiceX(QMainWindow):
             return False
 
     def show_save_as_dialog(self):
+        """Open dialog to select location"""
         if self.fileLoaded:
             try:
                 self.saveFileName = QFileDialog.getSaveFileName(
@@ -466,6 +486,7 @@ class InvoiceX(QMainWindow):
                                  QMessageBox.Ok)
 
     def extract_fields_from_pdf(self):
+        """Integration with invoice2data"""
         if self.fileLoaded:
             self.populate = PopulateFieldClass(self, self.factx,
                                                self.fieldsDict,
@@ -482,6 +503,7 @@ class InvoiceX(QMainWindow):
         pass
 
     def export_fields(self, outputformat):
+        """Export metadata in XML, JSON, YAML format"""
         if self.fileLoaded:
             self.exportFileName = QFileDialog.getSaveFileName(
                 self, 'Export file',
@@ -510,6 +532,7 @@ class InvoiceX(QMainWindow):
         self.factx.write_yml(fileName)
 
     def resizeEvent(self, event):
+        """Fix for pixelated images from imagemagick"""
         if self.fileLoaded:
             self.square.setPixmap(QPixmap(self.pdfPreviewImage).scaled(
                 self.square.size().width(), self.square.size().height(),
@@ -537,6 +560,7 @@ class EditFieldsClass(QWidget, object):
         self.initUI()
 
     def initUI(self):
+        """Set up dialog to edit Fields"""
         layout = QGridLayout()
         i = 0
         self.fieldsKeyList = []
@@ -571,6 +595,7 @@ class EditFieldsClass(QWidget, object):
         self.show()
 
     def update_fields_and_dock(self):
+        """Update fields and update dock"""
         try:
             for key, value in zip(self.fieldsKeyList, self.fieldsValueList):
                 if key[:4] != "date":

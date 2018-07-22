@@ -17,6 +17,7 @@ class PopulateFieldClass(QWidget):
         self.init_ui()
 
     def init_ui(self):
+        """Setup layout to add default field values"""
         layout = QGridLayout()
         i = 3
         customTemplate = QPushButton('Custom Template')
@@ -25,7 +26,6 @@ class PopulateFieldClass(QWidget):
 
         self.excludeDefaultFolder = QCheckBox(
             'Exclude default template folder', self)
-        # excludeDefaultFolder.stateChanged.connect(self.changeTitle)
         layout.addWidget(self.excludeDefaultFolder, 1, 1)
 
         self.customTemplateLineEdit = QLineEdit()
@@ -68,12 +68,14 @@ class PopulateFieldClass(QWidget):
         self.show()
 
     def customTemplateDialog(self):
+        """Dialog to select location of custom Template Folder"""
         self.customTemplateFolderName = QFileDialog.getExistingDirectory(
             self, "Select Custom Template Folder")
         if self.customTemplateFolderName:
             self.customTemplateLineEdit.setText(self.customTemplateFolderName)
 
     def call_invoice2data(self):
+        """Invoke invoice2data"""
         if self.excludeDefaultFolder.isChecked() and \
                 self.customTemplateFolderName is None:
             QMessageBox.critical(self, 'Error',
@@ -127,6 +129,7 @@ class populate_using_invoice2data(object):
         self.set_values()
 
     def set_values(self):
+        """Set field values using invoice2data"""
         templateerror = False
         fieldMatchDict = {
             'seller': 'issuer',
