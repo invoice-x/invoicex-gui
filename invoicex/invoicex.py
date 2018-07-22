@@ -359,11 +359,14 @@ class InvoiceX(QMainWindow):
         self.chooseStandardDialog.exec_()
 
     def set_standard_level(self):
-        try:
+        if hasattr(self, 'standard_temp'):
             self.standard = self.standard_temp
-            self.level = self.level_temp
-        except AttributeError:
+        else:
             self.standard = 'factur-x'
+
+        if hasattr(self, 'level_temp'):
+            self.level = self.level_temp
+        else:
             self.level = 'minimum'
         self.chooseStandardDialog.close()
 

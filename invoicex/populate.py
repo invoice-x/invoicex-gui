@@ -45,7 +45,7 @@ class PopulateFieldClass(QWidget):
             fKey = QLabel(self.mDict[key])
             fValue = QLineEdit()
             fValue.setText("")
-            if self.fDict[key] == "Field Not Specified":
+            if self.fDict[key] == "Field Not Specified" or key[:4] == "date":
                 fValue.setEnabled(False)
             else:
                 self.fieldsKeyList.append(key)
