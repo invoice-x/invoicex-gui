@@ -22,7 +22,7 @@ Development Guide
 
 	$ git checkout -b my_enhancement
 
-4. Send Pull Request to ``dev`` branch of this repository
+4. Send Pull Request to ``development`` branch of this repository
 
 5. If the Pull Request is merged and is found out to be stable it will be merged to `master branch <https://github.com/invoice-x/invoicex-gui>`_
 

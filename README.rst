@@ -1,5 +1,5 @@
 GUI for factur-x - Invoice-X GUI
-================================
+=================================
 
 |Travis CI|
 
@@ -16,7 +16,7 @@ Graphical User Interface for `factur-x <https://github.com/invoice-x/factur-x>`_
 
 The application is built using `PyQt5 <https://www.riverbankcomputing.com/software/pyqt/intro>`_
 
-**Latest Dev release**
+**Latest Stable release**
 
 v0.0.3
 
@@ -26,7 +26,7 @@ v0.0.3
 
 
 Requirements
-------------
+-------------
 
 - PyQt5 v5.10.1
 - PyPDF2
@@ -39,8 +39,17 @@ External Dependencies:
 - Imagemagick: `<https://www.imagemagick.org/script/download.php>`_
 - GhostScript: `<https://www.ghostscript.com/download/gsdnld.html>`_
 
+Installation
+-------------
+
+Install ``invoicex-gui`` using pip
+
+::
+
+    $ pip install invoicex-gui
+
 Running from source
--------
+--------------------
 
 ::
 
@@ -59,20 +68,20 @@ OR run from terminal
     $ invoicex-gui
 
 Development
------------
+------------
 
 If you are interested in improving this project, have a look at our
 `developer guide <https://github.com/invoice-x/invoicex-gui/blob/master/DEVELOP.rst>`_ to get you started quickly.
 
 Screenshots
------------
+------------
 
 .. image:: https://github.com/invoice-x/invoicex-gui/blob/master/Screenshots/mainWindow.png
 
 .. image:: https://github.com/invoice-x/invoicex-gui/blob/master/Screenshots/editDialog.png
 
 Author
-------
+-------
 `Harshit Joshi <https://github.com/duskybomb>`_
 
 .. |Travis CI| image:: https://travis-ci.org/invoice-x/invoicex-gui.svg?branch=master
