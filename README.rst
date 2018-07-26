@@ -62,14 +62,14 @@ Development
 -----------
 
 If you are interested in improving this project, have a look at our
-`developer guide <DEVELOP.rst>`__ to get you started quickly.
+`developer guide <https://github.com/invoice-x/invoicex-gui/blob/master/DEVELOP.rst>`_ to get you started quickly.
 
 Screenshots
 -----------
 
-.. image:: Screenshots/mainWindow.png
+.. image:: https://github.com/invoice-x/invoicex-gui/blob/master/Screenshots/mainWindow.png
 
-.. image:: Screenshots/editDialog.png
+.. image:: https://github.com/invoice-x/invoicex-gui/blob/master/Screenshots/editDialog.png
 
 Author
 ------
