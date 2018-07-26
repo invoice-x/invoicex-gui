@@ -12,6 +12,18 @@ setup(
     description='Graphical User Interface for factur-x library with basic functionalities',
     license="GNU General Public License (GPL)",
     long_description=open(path.join(path.dirname(__file__), 'README.rst')).read(),
+    package_data = {
+        'invoicex.facturx.flavors': [
+            '*.yml',
+            'factur-x/xml/*.xml',
+            'factur-x/xmp/*.xmp',
+            'factur-x/xsd/*.xsd',
+            'zugferd/xml/*.xml',
+            'zugferd/xmp/*.xmp',
+            'zugferd/xsd/*.xsd',
+           ],
+        'invoicex':['icons/*.png']
+        },
     packages=find_packages(),
     install_requires=[
         r.strip() for r in open(
