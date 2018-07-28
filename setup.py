@@ -5,7 +5,7 @@ from os import path
 
 setup(
     name='invoicex-gui',
-    version='0.0.8',
+    version='0.0.9',
     author='Harshit Joshi',
     author_email='harshit.joshi@outlook.com',
     url='https://github.com/invoice-x/invoicex-gui',
