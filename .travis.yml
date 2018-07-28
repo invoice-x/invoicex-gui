@@ -1,5 +1,3 @@
-env:
-  secure: "cvr23mTiKuVsCj/89oEt4oKtrHglcW37kQ7QdAVDzybm1iQqEwqLcJanFU93Xs1YooUlGfhOQFlNcnlShWpQFhe7Qu3xew+U1T+V4WlKo11zqlxxgb+7BNcnUU4N9BrhnB8ife1dGOgEDrnzb9wqEetWOp5LW3NmoWI3chCixayTp5oMdGMV/F/WCFGoHbvbS8u8EvN9Co06phtQeWKaPwdWXDxTfZwRBBDfjijNK1lR2FH+mYjGyTsmLto+71nypIDI6Db/cUCD6mHZy3yMQDL/6vpiBCOUl/GIqNsMy2Lr1KMrvYM5g4QGR6KfFFuMD6rfmj7VXE5JjMtwlOXFPEjIrt5rMQ4cs13NRKssxIk0ciymEfAt0+FI6VYkFRH5lIrl5eSWlkKrVQnCcwDoevBeAEdeSzIMk18Y+jhY25XtJyHZV7b8rSyozOiKWr3V51hZ6pLCgmrCkmROTyrgaZPPNymVH4EFrsCqu6GLOmE4I1t8wkwM2afqxLkCMBvlr0vd32C+rlzX48i635VDMwy+HsezChySPEgtO3XEmGMrx7SuwuUz52sx15dPZDCDaT++Owo407SvZfrDRgs8pC/fd6pWk9H3YoF5DWGn8/MDp9QaZBkuw1wwpElWYG8ZMD8PWxT4CVSuEgvmlvvOMUQxxhHcbY2wAPtUbLaHKRc="
 language: python
 python:
 - '3.5'
@@ -20,7 +18,7 @@ after_success:
 - git config --global user.email "bumpversion-after-ci@example.com"
 - git config --global user.name "Bumpversion after CI"
 - bumpversion --verbose patch
-- git push --tags
+- git push https://${GH_TOKEN}@github.com/invoice-x/invoicex-gui.git origin master --tags
 deploy:
   provider: pypi
   user: duskybomb
@@ -30,3 +28,8 @@ deploy:
     distributions: sdist bdist_wheel
     repo: invoice-x/invoicex-gui
     tags: true
+env:
+  global:
+    secure: U2zwsYCwUjXgyFo54izCamB6JVx8beu6VXHOdnoTv3YaaQu4rhMArpXvyni0XNbQ8MkZhMPVB1Ls7A26A37YposXvUNM9NkIUwyaokS8PPRd52NljRMLUJQFp6upC1GbK1n4hzSICKg31A7LztmEqSA0cnRHDp/WkRRUBhLrsp02oBFiSWY6la1X6f1OzGA7S9i1GZpiwnqKQkeW8YG2FzYQ8gQlNncSKrzI27WuTjJdMkywNN7c9lNxEyrK9hB2verDyckkrAzyZwEVp+u00GAtfj8vU3Om+xUSCEysC9gvon3A+xxemX/53qKhK45iiHNa4/zqYRQld8P6jlRgOGViey1EP2v/H372BmeQBU0qT4cEk2icy07ucBKQQ6OMlxc5A+GJIGQnDtCUlB3aZ4PdNAnMThSSPJvvS5TXGVpEpkWA0VcFeIoMbZdfuFLA/XExFSzkoe68O4u5YxL/HIPJlIjKA3j2+oid6Co0Boz/9cKGaqQMoE9zbXHSvoD+FzKSfdZsc8TeWK+HPeIqG7j/BYa5LwJm9IYje8WowAxAja4/QTXHMgUBrU6L/eRXtl2SDfc8LfaSwfJcgvowUNjYf6zeHL1MnXBlxZzLZTFbt5R5RD6Zwh+PhrHdTxze8LohE/bGBmwGvFBgiBfoaZao+lxEyUnkeHAlRIilHjE=
+notifications:
+  email: false
