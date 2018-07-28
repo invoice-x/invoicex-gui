@@ -27,7 +27,7 @@ deploy:
   password:
     secure: y2Hs0+XgzRC3dLaJ6yEQMhaYmJIy4A0QhR4KiyUVe5nZ8NZyZiLxOU4+06sebOvilPMKQGvXd+ohjxLKldXrZ4aRFH1haDDcQ5P8BJHE7Efouhn+xdwsKbkRqYoA/59f92OEN7Ua9+q14zGsBgvc+UKhxlj2E3zDFM7nHxpebhZnHP6xVsPKV1JV//JpQou3GpclnSaeJShpW/+nH86gHt1CUqLa6bb5VChj7pGlHrVUH7ritDRGbIVHCtKbR96XygZg+Qk0HsNwJGZrz7SeKTWAQICBirQr2ZSHprKPC2P9ez4RgIjfRwD+4LENyxIh5/pMpG/BkN12raIH3Yhdd6XuYXF0wweIztXJY4HxRfWYGA5vXyZPyBHy9gDlMpH24RR98j2XVoK9+ltkw49X0EiD7BmxfD4Y9/Kin6TBy2iNUpj8Z2IhGiJY0rLpSSP32AVn9CchF2mSE55nkXEH20Xxs++URHdAQHfijhADP59Ly2nI0sU6ISel4hC3O7TH6z/cBCRXcn4jo5FafDsZsK0lAqLhp478w/Ytm4w/G1sY20pzeMrgoGZKY3M+0cBYqfTKFVfJfm4+oHOHx7v2ZpwdrXyNfVrULLZTNdn4SmgIvQbQ/Mfkbpnz3SmIDOsW3poIzNaBoDY73jaPecfIMML5C8XdBmvhHtCXrNcXBj0=
   on:
-    distributions: sdist bdist_wheel
+    distributions: "sdist bdist_wheel"
     repo: invoice-x/invoicex-gui
     tags: false
 env:
