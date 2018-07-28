@@ -17,8 +17,11 @@ script:
 after_success:
 - git config --global user.email "bumpversion-after-ci@example.com"
 - git config --global user.name "Bumpversion after CI"
+- git clone https://${GH_TOKEN}@github.com/invoice-x/invoicex-gui.git
+- cd invoicex-gui
 - bumpversion --verbose patch
-- git push https://${GH_TOKEN}@github.com/invoice-x/invoicex-gui.git origin master --tags
+- git remote https://${GH_TOKEN}@github.com/invoice-x/invoicex-gui.git
+- git push origin master --tags
 deploy:
   provider: pypi
   user: duskybomb
