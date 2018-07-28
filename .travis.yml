@@ -20,7 +20,6 @@ after_success:
 - git clone https://${GH_TOKEN}@github.com/invoice-x/invoicex-gui.git
 - cd invoicex-gui
 - bumpversion --verbose patch
-- git remote https://${GH_TOKEN}@github.com/invoice-x/invoicex-gui.git
 - git push origin master --tags
 deploy:
   provider: pypi
@@ -30,7 +29,7 @@ deploy:
   on:
     distributions: sdist bdist_wheel
     repo: invoice-x/invoicex-gui
-    tags: true
+    tags: false
 env:
   global:
     secure: U2zwsYCwUjXgyFo54izCamB6JVx8beu6VXHOdnoTv3YaaQu4rhMArpXvyni0XNbQ8MkZhMPVB1Ls7A26A37YposXvUNM9NkIUwyaokS8PPRd52NljRMLUJQFp6upC1GbK1n4hzSICKg31A7LztmEqSA0cnRHDp/WkRRUBhLrsp02oBFiSWY6la1X6f1OzGA7S9i1GZpiwnqKQkeW8YG2FzYQ8gQlNncSKrzI27WuTjJdMkywNN7c9lNxEyrK9hB2verDyckkrAzyZwEVp+u00GAtfj8vU3Om+xUSCEysC9gvon3A+xxemX/53qKhK45iiHNa4/zqYRQld8P6jlRgOGViey1EP2v/H372BmeQBU0qT4cEk2icy07ucBKQQ6OMlxc5A+GJIGQnDtCUlB3aZ4PdNAnMThSSPJvvS5TXGVpEpkWA0VcFeIoMbZdfuFLA/XExFSzkoe68O4u5YxL/HIPJlIjKA3j2+oid6Co0Boz/9cKGaqQMoE9zbXHSvoD+FzKSfdZsc8TeWK+HPeIqG7j/BYa5LwJm9IYje8WowAxAja4/QTXHMgUBrU6L/eRXtl2SDfc8LfaSwfJcgvowUNjYf6zeHL1MnXBlxZzLZTFbt5R5RD6Zwh+PhrHdTxze8LohE/bGBmwGvFBgiBfoaZao+lxEyUnkeHAlRIilHjE=
