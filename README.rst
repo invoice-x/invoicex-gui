@@ -18,11 +18,11 @@ The application is built using `PyQt5 <https://www.riverbankcomputing.com/softwa
 
 **Latest Stable release**
 
-v0.0.3
+v0.1.0
 
-- Linux: `Linux Package <https://github.com/invoice-x/invoicex-gui/releases/download/v0.0.3/invoicex-gui-v0.0.3dev-linux.tar.gz>`_
-- Windows: `Windows executable <https://github.com/invoice-x/invoicex-gui/releases/download/v0.0.3/invoicex-gui-v0.0.3dev-Windows.zip>`_
-- MacOS: `MacOS executable <https://github.com/invoice-x/invoicex-gui/releases/download/v0.0.3/invoicex-gui-v0.0.3dev-MacOS.zip>`_
+- Linux: `Linux Package <https://github.com/invoice-x/invoicex-gui/releases/download/v0.1.0/invoicex-gui-v0.1.0-linux.tar.gz>`_
+- Windows: `Windows executable <https://github.com/invoice-x/invoicex-gui/releases/download/v0.1.0/invoicex-gui-v0.1.0-windows.zip>`_
+- MacOS: `MacOS executable <https://github.com/invoice-x/invoicex-gui/releases/download/v0.1.0/invoicex-gui-v0.1.0-macos.zip>`_
 
 
 Requirements
@@ -76,9 +76,9 @@ If you are interested in improving this project, have a look at our
 Screenshots
 ------------
 
-.. image:: https://github.com/invoice-x/invoicex-gui/blob/master/Screenshots/mainWindow.png
+.. image:: https://raw.githubusercontent.com/invoice-x/invoicex-gui/master/Screenshots/mainWindow.png
 
-.. image:: https://github.com/invoice-x/invoicex-gui/blob/master/Screenshots/editDialog.png
+.. image:: https://raw.githubusercontent.com/invoice-x/invoicex-gui/master/Screenshots/editDialog.png
 
 Author
 -------
