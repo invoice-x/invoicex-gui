@@ -21,7 +21,7 @@ The application is built using `PyQt5 <https://www.riverbankcomputing.com/softwa
 v0.1.0
 
 - Linux: `Linux Package <https://github.com/invoice-x/invoicex-gui/releases/download/v0.1.0/invoicex-gui-v0.1.0-linux.tar.gz>`_
-- Windows: `Windows executable <https://github.com/invoice-x/invoicex-gui/releases/download/v0.1.0/invoicex-gui-v0.1.0-windows.zip>`_
+- Windows (64-bit): `Windows executable <https://github.com/invoice-x/invoicex-gui/releases/download/v0.1.0/invoicex-gui-v0.1.0-windows.zip>`_
 - MacOS: `MacOS executable <https://github.com/invoice-x/invoicex-gui/releases/download/v0.1.0/invoicex-gui-v0.1.0-macos.zip>`_
 
 
