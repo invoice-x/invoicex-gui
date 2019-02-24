@@ -542,15 +542,20 @@ class InvoiceX(QMainWindow):
             QMainWindow.resizeEvent(self, event)
 
     def dragEnterEvent(self, event):
-        if event.mimeData().hasFormat('text/plain') and event.mimeData().text().startswith('file://') and event.mimeData().text().endswith('.pdf'):
+        if event.mimeData().hasFormat('text/plain'):
             event.accept()
         else:
             event.ignore()
     
     def dropEvent(self, event):
         fileURL = event.mimeData().text()
-        self.fileName = (fileURL[7: ], "pdf (*.pdf)")
-        self.load_pdf_file()
+        if fileURL.startswith('file://') and fileURL.endswith('.pdf'):
+            self.fileName = (fileURL[7: ], "pdf (*.pdf)")
+            self.load_pdf_file()
+        else:
+            QMessageBox.critical(self, 'Invalid File Type',
+                                 'Only PDF files are supported as input',
+                                 QMessageBox.Ok)
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.Close and source is self.fields:
