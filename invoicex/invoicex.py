@@ -36,6 +36,7 @@ class InvoiceX(QMainWindow):
 
         self.fileLoaded = False
         self.dialog = None
+        self.setAcceptDrops(True)
         self.initUI()
 
     def initUI(self):
@@ -539,6 +540,17 @@ class InvoiceX(QMainWindow):
                 Qt.KeepAspectRatio, Qt.SmoothTransformation))
             self.square.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Ignored)
             QMainWindow.resizeEvent(self, event)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasFormat('text/plain') and event.mimeData().text().startswith('file://') and event.mimeData().text().endswith('.pdf'):
+            event.accept()
+        else:
+            event.ignore()
+    
+    def dropEvent(self, event):
+        fileURL = event.mimeData().text()
+        self.fileName = (fileURL[7: ], "pdf (*.pdf)")
+        self.load_pdf_file()
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.Close and source is self.fields:
